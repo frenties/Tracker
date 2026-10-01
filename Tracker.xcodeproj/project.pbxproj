@@ -6,27 +6,8 @@
 	objectVersion = 110;
 	objects = {
 
-/* Begin PBXContainerItemProxy section */
-		5E5A7A33306A86E9007B89FD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E5A7A14306A86E8007B89FD /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 5E5A7A1B306A86E8007B89FD;
-			remoteInfo = Tracker;
-		};
-		5E5A7A3D306A86E9007B89FD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E5A7A14306A86E8007B89FD /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 5E5A7A1B306A86E8007B89FD;
-			remoteInfo = Tracker;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		5E5A7A1C306A86E8007B89FD /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		5E5A7A32306A86E9007B89FD /* TrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		5E5A7A3C306A86E9007B89FD /* TrackerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrackerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -48,30 +29,10 @@
 			path = Tracker;
 			sourceTree = "<group>";
 		};
-		5E5A7A35306A86E9007B89FD /* TrackerTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = TrackerTests;
-			sourceTree = "<group>";
-		};
-		5E5A7A3F306A86E9007B89FD /* TrackerUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = TrackerUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		5E5A7A19306A86E8007B89FD /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			files = (
-			);
-		};
-		5E5A7A2F306A86E9007B89FD /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			files = (
-			);
-		};
-		5E5A7A39306A86E9007B89FD /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
 			);
@@ -82,10 +43,8 @@
 		5E5A7A13306A86E8007B89FD = {
 			isa = PBXGroup;
 			children = (
-				5E5A7A1E306A86E8007B89FD /* Tracker */,
-				5E5A7A35306A86E9007B89FD /* TrackerTests */,
-				5E5A7A3F306A86E9007B89FD /* TrackerUITests */,
 				5E5A7A1D306A86E8007B89FD /* Products */,
+				5E5A7A1E306A86E8007B89FD /* Tracker */,
 			);
 			sourceTree = "<group>";
 		};
@@ -93,8 +52,6 @@
 			isa = PBXGroup;
 			children = (
 				5E5A7A1C306A86E8007B89FD /* Tracker.app */,
-				5E5A7A32306A86E9007B89FD /* TrackerTests.xctest */,
-				5E5A7A3C306A86E9007B89FD /* TrackerUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -120,48 +77,6 @@
 			productReference = 5E5A7A1C306A86E8007B89FD /* Tracker.app */;
 			productType = "com.apple.product-type.application";
 		};
-		5E5A7A31306A86E9007B89FD /* TrackerTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 5E5A7A48306A86E9007B89FD /* Build configuration list for PBXNativeTarget "TrackerTests" */;
-			buildPhases = (
-				5E5A7A2E306A86E9007B89FD /* Sources */,
-				5E5A7A2F306A86E9007B89FD /* Frameworks */,
-				5E5A7A30306A86E9007B89FD /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				5E5A7A34306A86E9007B89FD /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				5E5A7A35306A86E9007B89FD /* TrackerTests */,
-			);
-			name = TrackerTests;
-			productName = TrackerTests;
-			productReference = 5E5A7A32306A86E9007B89FD /* TrackerTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		5E5A7A3B306A86E9007B89FD /* TrackerUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 5E5A7A4B306A86E9007B89FD /* Build configuration list for PBXNativeTarget "TrackerUITests" */;
-			buildPhases = (
-				5E5A7A38306A86E9007B89FD /* Sources */,
-				5E5A7A39306A86E9007B89FD /* Frameworks */,
-				5E5A7A3A306A86E9007B89FD /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				5E5A7A3E306A86E9007B89FD /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				5E5A7A3F306A86E9007B89FD /* TrackerUITests */,
-			);
-			name = TrackerUITests;
-			productName = TrackerUITests;
-			productReference = 5E5A7A3C306A86E9007B89FD /* TrackerUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -174,14 +89,6 @@
 				TargetAttributes = {
 					5E5A7A1B306A86E8007B89FD = {
 						CreatedOnToolsVersion = 27.0;
-					};
-					5E5A7A31306A86E9007B89FD = {
-						CreatedOnToolsVersion = 27.0;
-						TestTargetID = 5E5A7A1B306A86E8007B89FD;
-					};
-					5E5A7A3B306A86E9007B89FD = {
-						CreatedOnToolsVersion = 27.0;
-						TestTargetID = 5E5A7A1B306A86E8007B89FD;
 					};
 				};
 			};
@@ -200,24 +107,12 @@
 			projectRoot = "";
 			targets = (
 				5E5A7A1B306A86E8007B89FD /* Tracker */,
-				5E5A7A31306A86E9007B89FD /* TrackerTests */,
-				5E5A7A3B306A86E9007B89FD /* TrackerUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		5E5A7A1A306A86E8007B89FD /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			files = (
-			);
-		};
-		5E5A7A30306A86E9007B89FD /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			files = (
-			);
-		};
-		5E5A7A3A306A86E9007B89FD /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
 			);
@@ -230,30 +125,7 @@
 			files = (
 			);
 		};
-		5E5A7A2E306A86E9007B89FD /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			files = (
-			);
-		};
-		5E5A7A38306A86E9007B89FD /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			files = (
-			);
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		5E5A7A34306A86E9007B89FD /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 5E5A7A1B306A86E8007B89FD /* Tracker */;
-			targetProxy = 5E5A7A33306A86E9007B89FD /* PBXContainerItemProxy */;
-		};
-		5E5A7A3E306A86E9007B89FD /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 5E5A7A1B306A86E8007B89FD /* Tracker */;
-			targetProxy = 5E5A7A3D306A86E9007B89FD /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		5E5A7A44306A86E9007B89FD /* Debug configuration for PBXNativeTarget "Tracker" */ = {
@@ -268,9 +140,9 @@
 				INFOPLIST_FILE = Tracker/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -279,12 +151,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ru.frenties.Tracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -300,9 +176,9 @@
 				INFOPLIST_FILE = Tracker/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -311,12 +187,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ru.frenties.Tracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -441,90 +321,6 @@
 			};
 			name = Release;
 		};
-		5E5A7A49306A86E9007B89FD /* Debug configuration for PBXNativeTarget "TrackerTests" */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = H34826LMQ2;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.frenties.TrackerTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Tracker";
-			};
-			name = Debug;
-		};
-		5E5A7A4A306A86E9007B89FD /* Release configuration for PBXNativeTarget "TrackerTests" */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = H34826LMQ2;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.frenties.TrackerTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Tracker";
-			};
-			name = Release;
-		};
-		5E5A7A4C306A86E9007B89FD /* Debug configuration for PBXNativeTarget "TrackerUITests" */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = H34826LMQ2;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.frenties.TrackerUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Tracker;
-			};
-			name = Debug;
-		};
-		5E5A7A4D306A86E9007B89FD /* Release configuration for PBXNativeTarget "TrackerUITests" */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = H34826LMQ2;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.frenties.TrackerUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Tracker;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -541,22 +337,6 @@
 			buildConfigurations = (
 				5E5A7A44306A86E9007B89FD /* Debug configuration for PBXNativeTarget "Tracker" */,
 				5E5A7A45306A86E9007B89FD /* Release configuration for PBXNativeTarget "Tracker" */,
-			);
-			defaultConfigurationName = Release;
-		};
-		5E5A7A48306A86E9007B89FD /* Build configuration list for PBXNativeTarget "TrackerTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				5E5A7A49306A86E9007B89FD /* Debug configuration for PBXNativeTarget "TrackerTests" */,
-				5E5A7A4A306A86E9007B89FD /* Release configuration for PBXNativeTarget "TrackerTests" */,
-			);
-			defaultConfigurationName = Release;
-		};
-		5E5A7A4B306A86E9007B89FD /* Build configuration list for PBXNativeTarget "TrackerUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				5E5A7A4C306A86E9007B89FD /* Debug configuration for PBXNativeTarget "TrackerUITests" */,
-				5E5A7A4D306A86E9007B89FD /* Release configuration for PBXNativeTarget "TrackerUITests" */,
 			);
 			defaultConfigurationName = Release;
 		};
