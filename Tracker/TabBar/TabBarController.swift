@@ -1,7 +1,7 @@
 import UIKit
 
 final class TabBarController: UITabBarController {
-    //MARK: - Lifecycle
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -9,17 +9,18 @@ final class TabBarController: UITabBarController {
         setupTabBar()
     }
     
+    // MARK: - Setup UI
     private func setupTabs() {
-        
         let trackerViewController = TrackerViewController()
+        let trackerNavigationController = UINavigationController(rootViewController: trackerViewController)
         
-        trackerViewController.tabBarItem = UITabBarItem(
+        trackerNavigationController.tabBarItem = UITabBarItem(
             title: "Трекеры",
             image: UIImage(resource: .trackersIteam),
             selectedImage: nil
         )
         
-        let statisticViewController = StatiscticViewController()
+        let statisticViewController = StatisticViewController()
         
         statisticViewController.tabBarItem = UITabBarItem(
             title: "Статистика",
@@ -27,7 +28,7 @@ final class TabBarController: UITabBarController {
             selectedImage: nil
         )
         
-        viewControllers = [trackerViewController, statisticViewController]
+        viewControllers = [trackerNavigationController, statisticViewController]
     }
     
     private func setupTabBar() {
