@@ -29,10 +29,10 @@ final class CreateTrackerViewController: UIViewController {
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "Введите название трекера"
         textField.backgroundColor = UIColor(resource: .backgroundDay)
-        textField.layer.cornerRadius = 16
+        textField.layer.cornerRadius = UIConstants.cornerRadius
         textField.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: UIConstants.textFieldPadding, height: 0))
         textField.leftView = paddingView
         textField.leftViewMode = .always
         textField.clearButtonMode = .whileEditing
@@ -43,7 +43,7 @@ final class CreateTrackerViewController: UIViewController {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = UIColor(resource: .backgroundDay)
-        tableView.layer.cornerRadius = 16
+        tableView.layer.cornerRadius = UIConstants.cornerRadius
         tableView.isScrollEnabled = false
         tableView.separatorStyle = .singleLine
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
@@ -55,7 +55,7 @@ final class CreateTrackerViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Отменить", for: .normal)
         button.setTitleColor(UIColor(resource: .redYP), for: .normal)
-        button.layer.cornerRadius = 16
+        button.layer.cornerRadius = UIConstants.cornerRadius
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor(resource: .redYP).cgColor
         button.backgroundColor = .clear
@@ -67,7 +67,7 @@ final class CreateTrackerViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Создать", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 16
+        button.layer.cornerRadius = UIConstants.cornerRadius
         button.backgroundColor = .lightGray
         return button
     }()
@@ -91,72 +91,75 @@ final class CreateTrackerViewController: UIViewController {
         setupTableView()
     }
     
-    // MARK: - Setup UI
+    // MARK: - Setup UI & Constraints
     private func setupViews() {
-        view.addSubview(titleLabel)
-        view.addSubview(nameTextField)
-        view.addSubview(optionsTableView)
-        view.addSubview(cancelButton)
-        view.addSubview(createButton)
-        view.addSubview(errorLabel)
-        
+        addSubviews()
+        setupActions()
+        setupMainConstraints()
+    }
+    
+    private func addSubviews() {
+        [titleLabel, nameTextField, optionsTableView, cancelButton, createButton, errorLabel].forEach {
+            view.addSubview($0)
+        }
+    }
+    
+    private func setupActions() {
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
-        
         nameTextField.delegate = self
-        
-        optionsTableViewTopConstraint = optionsTableView.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 24)
+    }
+    
+    private func setupMainConstraints() {
+        optionsTableViewTopConstraint = optionsTableView.topAnchor.constraint(
+            equalTo: nameTextField.bottomAnchor,
+            constant: UIConstants.tableViewTopDefaultOffset
+        )
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 38),
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: UIConstants.titleTopOffset),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleLabel.widthAnchor.constraint(equalToConstant: 133),
-            titleLabel.heightAnchor.constraint(equalToConstant: 22),
+            titleLabel.widthAnchor.constraint(equalToConstant: UIConstants.titleWidth),
+            titleLabel.heightAnchor.constraint(equalToConstant: UIConstants.titleHeight),
             
-            nameTextField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 38),
-            nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            nameTextField.heightAnchor.constraint(equalToConstant: 75),
+            nameTextField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: UIConstants.textFieldTopOffset),
+            nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.leadingPadding),
+            nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: UIConstants.trailingPadding),
+            nameTextField.heightAnchor.constraint(equalToConstant: UIConstants.textFieldHeight),
             
-            errorLabel.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 8),
-            errorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            errorLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            errorLabel.heightAnchor.constraint(equalToConstant: 22),
+            errorLabel.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: UIConstants.errorLabelTopOffset),
+            errorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.leadingPadding),
+            errorLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: UIConstants.trailingPadding),
+            errorLabel.heightAnchor.constraint(equalToConstant: UIConstants.errorLabelHeight),
             
             optionsTableViewTopConstraint!,
-            optionsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            optionsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            optionsTableView.heightAnchor.constraint(equalToConstant: 150),
+            optionsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.leadingPadding),
+            optionsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: UIConstants.trailingPadding),
+            optionsTableView.heightAnchor.constraint(equalToConstant: UIConstants.tableViewHeight),
             
-            cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            cancelButton.widthAnchor.constraint(equalToConstant: 166),
-            cancelButton.heightAnchor.constraint(equalToConstant: 60),
+            cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: UIConstants.buttonBottomOffset),
+            cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.buttonLeadingPadding),
+            cancelButton.widthAnchor.constraint(equalToConstant: UIConstants.buttonWidth),
+            cancelButton.heightAnchor.constraint(equalToConstant: UIConstants.buttonHeight),
             
             createButton.centerYAnchor.constraint(equalTo: cancelButton.centerYAnchor),
-            createButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            createButton.widthAnchor.constraint(equalToConstant: 166),
-            createButton.heightAnchor.constraint(equalToConstant: 60)
+            createButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: UIConstants.buttonTrailingPadding),
+            createButton.widthAnchor.constraint(equalToConstant: UIConstants.buttonWidth),
+            createButton.heightAnchor.constraint(equalToConstant: UIConstants.buttonHeight)
         ])
     }
     
     private func setupTableView() {
         optionsTableView.dataSource = self
         optionsTableView.delegate = self
+        
+        optionsTableView.register(UITableViewCell.self, forCellReuseIdentifier: UIConstants.cellIdentifier)
     }
     
     // MARK: - Actions
     @objc private func createButtonTapped() {
         guard let trackerName = nameTextField.text, !trackerName.isEmpty else { return }
-        
-        let newTracker = Tracker(
-            id: UUID(),
-            name: trackerName,
-            color: .greenYP,
-            emoji: "",
-            schedule: selectedDays
-        )
-        
+        let newTracker = Tracker(id: UUID(), name: trackerName, color: .greenYP, emoji: "", schedule: selectedDays)
         delegate?.didCreateTracker(newTracker, toCategory: "Важное")
         dismiss(animated: true)
     }

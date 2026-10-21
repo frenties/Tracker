@@ -11,10 +11,10 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell: UITableViewCell
-        if let dequeuedCell = tableView.dequeueReusableCell(withIdentifier: "OptionCell") {
+        if let dequeuedCell = tableView.dequeueReusableCell(withIdentifier: UIConstants.cellIdentifier) {
             cell = dequeuedCell
         } else {
-            cell = UITableViewCell(style: .subtitle, reuseIdentifier: "OptionCell")
+            cell = UITableViewCell(style: .subtitle, reuseIdentifier: UIConstants.cellIdentifier)
         }
         
         cell.backgroundColor = .clear
@@ -24,31 +24,13 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
         cell.textLabel?.textColor = UIColor(resource: .blackDay)
         
         if indexPath.row == 0 {
-            cell.textLabel?.text = "Категория"
+            cell.textLabel?.text = UIConstants.Strings.category
             cell.detailTextLabel?.text = nil
         } else {
-            cell.textLabel?.text = "Расписание"
-            
-            
+            cell.textLabel?.text = UIConstants.Strings.schedule
+        
             if !selectedDays.isEmpty {
-                
-                if selectedDays.count == 7 {
-                    cell.detailTextLabel?.text = "Каждый день"
-                } else {
-                    let shortNames = selectedDays.map { day -> String in
-                        switch day {
-                        case .monday: return "Пн"
-                        case .tuesday: return "Вт"
-                        case .wednesday: return "Ср"
-                        case .thursday: return "Чт"
-                        case .friday: return "Пт"
-                        case .saturday: return "Сб"
-                        case .sunday: return "Вс"
-                        }
-                    }
-                    cell.detailTextLabel?.text = shortNames.joined(separator: ", ")
-                }
-                
+                cell.detailTextLabel?.text = formatSelectedDays(selectedDays)
                 cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
                 cell.detailTextLabel?.textColor = .gray
             } else {
@@ -106,16 +88,40 @@ extension CreateTrackerViewController: UITextFieldDelegate {
         
         if updatedText.count > 38 {
             errorLabel.isHidden = false
-            optionsTableViewTopConstraint?.constant = 62
+            optionsTableViewTopConstraint?.constant = UIConstants.tableViewTopErrorOffset
             
             if currentText.count == 38 && !string.isEmpty {
                 return false
             }
         } else {
             errorLabel.isHidden = true
-            optionsTableViewTopConstraint?.constant = 24
+            optionsTableViewTopConstraint?.constant = UIConstants.tableViewTopDefaultOffset
         }
         
         return true
     }
 }
+
+// MARK: - Private Methods
+private extension CreateTrackerViewController {
+   
+    func formatSelectedDays(_ days: [WeekDay]) -> String {
+        if days.count == 7 {
+            return UIConstants.Strings.everyDay
+        }
+        
+        let shortNames = days.map { day -> String in
+            switch day {
+            case .monday: return "Пн"
+            case .tuesday: return "Вт"
+            case .wednesday: return "Ср"
+            case .thursday: return "Чт"
+            case .friday: return "Пт"
+            case .saturday: return "Сб"
+            case .sunday: return "Вс"
+            }
+        }
+        return shortNames.joined(separator: ", ")
+    }
+}
+
