@@ -75,6 +75,8 @@ extension CreateTrackerViewController: ScheduleViewControllerDelegate {
     func didUpdateSchedule(_ selectedDays: [WeekDay]) {
         self.selectedDays = selectedDays
         self.optionsTableView.reloadData()
+        
+        validateForm()
     }
 }
 
@@ -85,6 +87,8 @@ extension CreateTrackerViewController: UITextFieldDelegate {
         let currentText = textField.text ?? ""
         guard let stringRange = Range(range, in: currentText) else { return false }
         let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+        
+        self.trackerName = updatedText
         
         if updatedText.count > 38 {
             errorLabel.isHidden = false
@@ -98,6 +102,7 @@ extension CreateTrackerViewController: UITextFieldDelegate {
             optionsTableViewTopConstraint?.constant = UIConstants.tableViewTopDefaultOffset
         }
         
+        validateForm()
         return true
     }
 }

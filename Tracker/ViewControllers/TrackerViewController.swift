@@ -4,6 +4,10 @@ import UIKit
 final class TrackerViewController: UIViewController {
     
     // MARK: - Properties
+    private let trackerStore: TrackerStore
+    private let trackerCategoryStore: TrackerCategoryStore
+    private let trackerRecordStore: TrackerRecordStore
+    
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
     var visibleCategories: [TrackerCategory] = []
@@ -71,6 +75,18 @@ final class TrackerViewController: UIViewController {
         collection.backgroundColor = .clear
         return collection
     }()
+    
+    // MARK: - Initializers
+    init(trackerStore: TrackerStore, trackerCategoryStore: TrackerCategoryStore, trackerRecordStore: TrackerRecordStore) {
+        self.trackerStore = trackerStore
+        self.trackerCategoryStore = trackerCategoryStore
+        self.trackerRecordStore = trackerRecordStore
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -174,4 +190,3 @@ extension TrackerViewController: CreateTrackerViewControllerDelegate {
         filterTrackers(for: currentDate)
     }
 }
-
