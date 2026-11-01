@@ -1,15 +1,14 @@
-import Foundation
 import UIKit
 
 // MARK: - UICollectionViewDataSource & UICollectionViewDelegate
 extension CreateTrackerViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        2
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return section == 0 ? UIConstants.emojis.count : UIConstants.colors.count
+        section == 0 ? UIConstants.emojis.count : UIConstants.colors.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -36,6 +35,7 @@ extension CreateTrackerViewController: UICollectionViewDataSource, UICollectionV
               let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: UIConstants.headerIdentifier, for: indexPath) as? CreateTrackerHeaderView else {
             return UICollectionReusableView()
         }
+        
         header.titleLabel.text = indexPath.section == 0 ? UIConstants.Strings.emojiSectionTitle : UIConstants.Strings.colorSectionTitle
         return header
     }
@@ -46,24 +46,21 @@ extension CreateTrackerViewController: UICollectionViewDataSource, UICollectionV
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
+        0
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 6
+        6
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 34)
+        CGSize(width: collectionView.frame.width, height: 34)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        if section == 0 {
-            return UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
-        } else {
-            return UIEdgeInsets(top: 16, left: 16, bottom: 12, right: 16)
-        }
+        UIEdgeInsets(top: section == 0 ? 12 : 16, left: 16, bottom: 12, right: 16)
     }
+    
     
     // MARK: - Selection Handling
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

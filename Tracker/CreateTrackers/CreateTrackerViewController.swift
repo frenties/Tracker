@@ -1,4 +1,3 @@
-import Foundation
 import UIKit
 
 // MARK: - CreateTrackerViewControllerDelegate Protocol
@@ -252,9 +251,13 @@ final class CreateTrackerViewController: UIViewController {
             emoji: UIConstants.emojis[emojiIndex],
             schedule: selectedDays
         )
+        let trackerStore = TrackerStore(context: CoreDataStack.shared.context)
+        trackerStore.addNewTracker(newTracker)
+        
         delegate?.didCreateTracker(newTracker, toCategory: "Важное")
         dismiss(animated: true)
     }
+    
     @objc private func cancelButtonTapped() {
         dismiss(animated: true)
     }

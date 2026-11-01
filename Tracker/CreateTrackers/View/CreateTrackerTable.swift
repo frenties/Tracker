@@ -1,4 +1,3 @@
-import Foundation
 import UIKit
 
 // MARK: - UITableViewDataSource & UITableViewDelegate
@@ -28,7 +27,7 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
             cell.detailTextLabel?.text = nil
         } else {
             cell.textLabel?.text = UIConstants.Strings.schedule
-        
+            
             if !selectedDays.isEmpty {
                 cell.detailTextLabel?.text = formatSelectedDays(selectedDays)
                 cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
@@ -90,11 +89,11 @@ extension CreateTrackerViewController: UITextFieldDelegate {
         
         self.trackerName = updatedText
         
-        if updatedText.count > 38 {
+        if updatedText.count > UIConstants.maxTrackerNameLength {
             errorLabel.isHidden = false
             optionsTableViewTopConstraint?.constant = UIConstants.tableViewTopErrorOffset
             
-            if currentText.count == 38 && !string.isEmpty {
+            if currentText.count == UIConstants.maxTrackerNameLength && !string.isEmpty {
                 return false
             }
         } else {
@@ -109,7 +108,7 @@ extension CreateTrackerViewController: UITextFieldDelegate {
 
 // MARK: - Private Methods
 private extension CreateTrackerViewController {
-   
+    
     func formatSelectedDays(_ days: [WeekDay]) -> String {
         if days.count == 7 {
             return UIConstants.Strings.everyDay

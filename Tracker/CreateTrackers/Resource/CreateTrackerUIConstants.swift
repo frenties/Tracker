@@ -1,4 +1,3 @@
-import Foundation
 import UIKit
 
 // MARK: - CreateTracker UI Constants
@@ -38,7 +37,6 @@ enum UIConstants {
         UIColor(resource: .colorSelection18)
     ]
     
-    
     static let titleWidth: CGFloat = 133
     static let titleHeight: CGFloat = 22
     static let textFieldHeight: CGFloat = 75
@@ -70,14 +68,14 @@ enum UIConstants {
     static let inputCellHeight: CGFloat = 75
     static let menuCellHeight: CGFloat = 75
     
+    static let maxTrackerNameLength = 38
     
-    // MARK: - Localizable
+    // MARK: - Localizable Strings (String Catalog)
     enum Strings {
-        static let category = NSLocalizedString("create_tracker_category", comment: "Текст ячейки Категория")
-        static let schedule = NSLocalizedString("create_tracker_schedule", comment: "Текст ячейки Расписание")
-        static let everyDay = NSLocalizedString("create_tracker_every_day", comment: "Текст Каждый день для подзаголовка")
-        static let emojiSectionTitle = "Emoji"
-        static let colorSectionTitle = "Цвет"
+        static let category = String(localized: "create_tracker_category")
+        static let schedule = String(localized: "create_tracker_schedule")
+        static let everyDay = String(localized: "create_tracker_every_day")
+        static let emojiSectionTitle = String(localized: "create_tracker_emoji_section")
+        static let colorSectionTitle = String(localized: "create_tracker_color_section")
     }
 }
-

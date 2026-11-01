@@ -1,12 +1,11 @@
-import Foundation
 import UIKit
 
-final class TrackerViewController: UIViewController {
+final class TrackerViewController: UIViewController, TrackerStoreDelegate {
     
     // MARK: - Properties
     private let trackerStore: TrackerStore
-    private let trackerCategoryStore: TrackerCategoryStore
-    private let trackerRecordStore: TrackerRecordStore
+       private let trackerCategoryStore: TrackerCategoryStore
+       private let trackerRecordStore: TrackerRecordStore
     
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
@@ -81,12 +80,17 @@ final class TrackerViewController: UIViewController {
         self.trackerStore = trackerStore
         self.trackerCategoryStore = trackerCategoryStore
         self.trackerRecordStore = trackerRecordStore
+        
         super.init(nibName: nil, bundle: nil)
+        
+        self.trackerStore.delegate = self
     }
+
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    @available(*, unavailable)
+       required init?(coder: NSCoder) {
+           nil
+       }
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -111,12 +115,9 @@ final class TrackerViewController: UIViewController {
         setupBackgroundImage()
         setupSubtitleLabel()
         
-        if categories.isEmpty {
-            self.categories = TrackerMockData.setupMockCategories()
-        }
-        
         filterTrackers(for: currentDate)
     }
+
     
     // MARK: - Actions & Filtering
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
@@ -134,33 +135,36 @@ final class TrackerViewController: UIViewController {
         present(createTrackerVC, animated: true)
     }
     
-    func filterTrackers(for date: Date) {
-        var calendar = Calendar.current
-        calendar.firstWeekday = 2
+    private func filterTrackers(for date: Date) {
+        let calendar = Calendar.current
+        let weekDayComponent = calendar.component(.weekday, from: date)
+        let targetRawValue = weekDayComponent == 1 ? 7 : weekDayComponent - 1
         
-        let weekDayIndex = calendar.component(.weekday, from: date)
-        let targetWeekDay = weekDayIndex == 1 ? WeekDay.sunday : WeekDay(rawValue: weekDayIndex - 1)
+        guard let currentWeekDay = WeekDay(rawValue: targetRawValue) else { return }
         
-        guard let currentWeekDay = targetWeekDay else { return }
-        let searchText = searchTextField.text?.lowercased() ?? ""
-        
-        visibleCategories = categories.compactMap { category in
-            let filteredTrackers = category.trackers.filter { tracker in
-                let matchesDate = tracker.schedule.contains(currentWeekDay)
-                let matchesSearch = searchText.isEmpty || tracker.name.lowercased().contains(searchText)
-                return matchesDate && matchesSearch
-            }
-            
-            if filteredTrackers.isEmpty { return nil }
-            return TrackerCategory(title: category.title, trackers: filteredTrackers)
+        let allTrackers = trackerStore.trackers
+        let filteredTrackers = allTrackers.filter { tracker in
+            tracker.schedule.contains(currentWeekDay)
         }
         
-        let isTrackersListEmpty = visibleCategories.isEmpty
-        backgroundImage.isHidden = isTrackersListEmpty == false
-        subtitleLabel.isHidden = isTrackersListEmpty == false
+        if !filteredTrackers.isEmpty {
+            self.visibleCategories = [
+                TrackerCategory(
+                    title: String(localized: "create_tracker_category"),
+                    trackers: filteredTrackers
+                )
+            ]
+        } else {
+            self.visibleCategories = []
+        }
         
         collectionView.reloadData()
+        
+        let isTrackersEmpty = visibleCategories.isEmpty
+        backgroundImage.isHidden = !isTrackersEmpty
+        subtitleLabel.isHidden = !isTrackersEmpty
     }
+
 }
 
 // MARK: - CreateTrackerViewControllerDelegate
@@ -189,4 +193,8 @@ extension TrackerViewController: CreateTrackerViewControllerDelegate {
         self.categories = newCategories
         filterTrackers(for: currentDate)
     }
+    
+    func store(_ store: TrackerStore, didUpdate update: TrackerStoreUpdate) {
+            filterTrackers(for: currentDate)
+        }
 }
