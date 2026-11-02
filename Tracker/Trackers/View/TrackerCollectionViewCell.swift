@@ -1,4 +1,3 @@
-import Foundation
 import UIKit
 
 final class TrackerCollectionViewCell: UICollectionViewCell {
@@ -95,13 +94,11 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         completeButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
-            // Card
             cardView.topAnchor.constraint(equalTo: contentView.topAnchor),
             cardView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             cardView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             cardView.heightAnchor.constraint(equalToConstant: 90),
             
-            // Emoji
             emojiBackgroundView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 12),
             emojiBackgroundView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 12),
             emojiBackgroundView.widthAnchor.constraint(equalToConstant: 24),
@@ -110,18 +107,15 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
             emojiLabel.centerXAnchor.constraint(equalTo: emojiBackgroundView.centerXAnchor),
             emojiLabel.centerYAnchor.constraint(equalTo: emojiBackgroundView.centerYAnchor),
             
-            // Title
             titleLabel.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 12),
             titleLabel.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -12),
             titleLabel.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -12),
             
-            // Button
             completeButton.topAnchor.constraint(equalTo: cardView.bottomAnchor, constant: 8),
             completeButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
             completeButton.widthAnchor.constraint(equalToConstant: 34),
             completeButton.heightAnchor.constraint(equalToConstant: 34),
             
-            // Day
             daysLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
             daysLabel.centerYAnchor.constraint(equalTo: completeButton.centerYAnchor)
         ])

@@ -1,4 +1,3 @@
-import Foundation
 import UIKit
 
 // MARK: - UITableViewDataSource & UITableViewDelegate
@@ -28,7 +27,7 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
             cell.detailTextLabel?.text = nil
         } else {
             cell.textLabel?.text = UIConstants.Strings.schedule
-        
+            
             if !selectedDays.isEmpty {
                 cell.detailTextLabel?.text = formatSelectedDays(selectedDays)
                 cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
@@ -75,6 +74,8 @@ extension CreateTrackerViewController: ScheduleViewControllerDelegate {
     func didUpdateSchedule(_ selectedDays: [WeekDay]) {
         self.selectedDays = selectedDays
         self.optionsTableView.reloadData()
+        
+        validateForm()
     }
 }
 
@@ -86,11 +87,13 @@ extension CreateTrackerViewController: UITextFieldDelegate {
         guard let stringRange = Range(range, in: currentText) else { return false }
         let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
         
-        if updatedText.count > 38 {
+        self.trackerName = updatedText
+        
+        if updatedText.count > UIConstants.maxTrackerNameLength {
             errorLabel.isHidden = false
             optionsTableViewTopConstraint?.constant = UIConstants.tableViewTopErrorOffset
             
-            if currentText.count == 38 && !string.isEmpty {
+            if currentText.count == UIConstants.maxTrackerNameLength && !string.isEmpty {
                 return false
             }
         } else {
@@ -98,13 +101,14 @@ extension CreateTrackerViewController: UITextFieldDelegate {
             optionsTableViewTopConstraint?.constant = UIConstants.tableViewTopDefaultOffset
         }
         
+        validateForm()
         return true
     }
 }
 
 // MARK: - Private Methods
 private extension CreateTrackerViewController {
-   
+    
     func formatSelectedDays(_ days: [WeekDay]) -> String {
         if days.count == 7 {
             return UIConstants.Strings.everyDay

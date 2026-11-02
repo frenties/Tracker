@@ -1,4 +1,3 @@
-import Foundation
 import UIKit
 
 final class TrackerMockData {
@@ -21,5 +20,3 @@ final class TrackerMockData {
         return [testCategory]
     }
 }
-
-

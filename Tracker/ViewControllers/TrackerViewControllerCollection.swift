@@ -56,13 +56,16 @@ extension TrackerViewController: UICollectionViewDataSource {
                 return
             }
             
+            let record = TrackerRecord(id: tracker.id, date: self.currentDate)
+            
             if isCompletedToday {
                 self.completedTrackers.removeAll { record in
                     record.id == tracker.id && Calendar.current.isDate(record.date, inSameDayAs: self.currentDate)
                 }
+                self.trackerRecordStore.removeRecord(record)
             } else {
-                let newRecord = TrackerRecord(id: tracker.id, date: self.currentDate)
-                self.completedTrackers.append(newRecord)
+                self.completedTrackers.append(record)
+                self.trackerRecordStore.addRecord(record)
             }
             
             collectionView.reloadItems(at: [indexPath])
