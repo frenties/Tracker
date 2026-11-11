@@ -1,4 +1,3 @@
-import Foundation
 import UIKit
 
 // MARK: - CreateTracker UI Constants
@@ -38,7 +37,6 @@ enum UIConstants {
         UIColor(resource: .colorSelection18)
     ]
     
-    
     static let titleWidth: CGFloat = 133
     static let titleHeight: CGFloat = 22
     static let textFieldHeight: CGFloat = 75
@@ -70,6 +68,36 @@ enum UIConstants {
     static let inputCellHeight: CGFloat = 75
     static let menuCellHeight: CGFloat = 75
     
+    // MARK: - Validation & Table Constants
+    static let maxTrackerNameLength = 38
+    static let optionsTableRowsCount = 2
+    static let daysInWeekCount = 7
+    static let categoryRowIndex = 0
+    static let scheduleRowIndex = 1
+    
+    // MARK: - Onboarding Constants
+    static let onboardingButtonBottomOffset: CGFloat = -50
+    static let onboardingTitleBottomOffset: CGFloat = -160
+    static let onboardingPageControlBottomOffset: CGFloat = -134
+    static let onboardingTitleLeadingTrailingPadding: CGFloat = 16
+
+    static let onboardingTitleFontSize: CGFloat = 32
+    static let onboardingTitleLineHeight: CGFloat = 38
+    static let onboardingPageControlAlpha: CGFloat = 0.3
+    
+    // MARK: - Category Screen Constants
+    static let categoryButtonBottomOffset: CGFloat = -16
+    static let categoryButtonHeight: CGFloat = 60
+    static let categoryPlaceholderImageSize: CGFloat = 80
+    static let categoryPlaceholderLabelTopOffset: CGFloat = 8
+    static let categoryTableViewTopOffset: CGFloat = 24
+    static let categoryTableViewBottomOffset: CGFloat = -24
+    static let categoryPlaceholderFontSize: CGFloat = 12
+    static let categoryPlaceholderLineSpacing: CGFloat = 4
+    static let categoryPlaceholderNumberOfLines = 2
+    static let categoryTitleFontSize: CGFloat = 16
+    static let categoryTextFieldFontSize: CGFloat = 17
+    static let categoryButtonFontSize: CGFloat = 16
     
     // MARK: - Localizable
     enum Strings {
@@ -78,6 +106,10 @@ enum UIConstants {
         static let everyDay = NSLocalizedString("create_tracker_every_day", comment: "Текст Каждый день для подзаголовка")
         static let emojiSectionTitle = "Emoji"
         static let colorSectionTitle = "Цвет"
+        static let categoryPlaceholder = "Привычки и события можно\nобъединить по смыслу"
+        static let addCategoryButtonTitle = "Добавить категорию"
+        static let newCategoryTitle = "Новая категория"
+        static let categoryNamePlaceholder = "Введите название категории"
+        static let doneButtonTitle = "Готово"
     }
 }
-

@@ -111,9 +111,8 @@ final class TrackerViewController: UIViewController {
         setupBackgroundImage()
         setupSubtitleLabel()
         
-        if categories.isEmpty {
-            self.categories = TrackerMockData.setupMockCategories()
-        }
+        self.categories = trackerCategoryStore.categories
+        self.completedTrackers = trackerRecordStore.records
         
         filterTrackers(for: currentDate)
     }

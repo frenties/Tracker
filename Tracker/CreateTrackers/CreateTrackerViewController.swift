@@ -15,6 +15,7 @@ final class CreateTrackerViewController: UIViewController {
     
     var selectedEmojiIndex: Int?
     var selectedColorIndex: Int?
+    var selectedCategoryTitle: String = ""
     var trackerName: String = ""
     
     // MARK: - UI Elements
@@ -196,7 +197,6 @@ final class CreateTrackerViewController: UIViewController {
             createButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: UIConstants.buttonTrailingPadding),
             createButton.widthAnchor.constraint(equalToConstant: UIConstants.buttonWidth),
             createButton.heightAnchor.constraint(equalToConstant: UIConstants.buttonHeight)
-            
         ])
     }
     
@@ -209,17 +209,15 @@ final class CreateTrackerViewController: UIViewController {
     private func setupCollectionView() {
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.estimatedItemSize = .zero
+            
             layout.itemSize = CGSize(width: 52, height: 52)
             layout.minimumInteritemSpacing = 0
             layout.minimumLineSpacing = 0
-            
             layout.sectionInset = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
             layout.headerReferenceSize = CGSize(width: collectionView.bounds.width, height: 34)
         }
-        
         collectionView.dataSource = self
         collectionView.delegate = self
-        
         collectionView.register(CreateTrackerEmojiCell.self, forCellWithReuseIdentifier: UIConstants.emojiCellIdentifier)
         collectionView.register(CreateTrackerColorCell.self, forCellWithReuseIdentifier: UIConstants.colorCellIdentifier)
         collectionView.register(
@@ -227,9 +225,7 @@ final class CreateTrackerViewController: UIViewController {
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: UIConstants.headerIdentifier
         )
-        
     }
-    
     // MARK: - Validation
     func validateForm() {
         let isNameValid = !trackerName.isEmpty
@@ -241,10 +237,16 @@ final class CreateTrackerViewController: UIViewController {
         createButton.backgroundColor = isFormValid ? UIColor(resource: .blackDay) : .lightGray
     }
     // MARK: - Actions
+    @objc private func cancelButtonTapped() {
+        dismiss(animated: true)
+    }
+    
     @objc private func createButtonTapped() {
         guard !trackerName.isEmpty,
               let emojiIndex = selectedEmojiIndex,
-              let colorIndex = selectedColorIndex else { return }
+              let colorIndex = selectedColorIndex,
+              !selectedCategoryTitle.isEmpty else { return }
+        
         let newTracker = Tracker(
             id: UUID(),
             name: trackerName,
@@ -252,11 +254,9 @@ final class CreateTrackerViewController: UIViewController {
             emoji: UIConstants.emojis[emojiIndex],
             schedule: selectedDays
         )
-        delegate?.didCreateTracker(newTracker, toCategory: "Важное")
+        
+        delegate?.didCreateTracker(newTracker, toCategory: selectedCategoryTitle)
         dismiss(animated: true)
     }
-    @objc private func cancelButtonTapped() {
-        dismiss(animated: true)
-    }
-    
+
 }

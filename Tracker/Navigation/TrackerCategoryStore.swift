@@ -1,4 +1,3 @@
-import Foundation
 import UIKit
 import CoreData
 
@@ -18,6 +17,10 @@ final class TrackerCategoryStore: NSObject {
     
     // MARK: - Public Properties
     weak var delegate: TrackerCategoryStoreDelegate?
+    
+    var fetchedCategories: [TrackerCategoryCoreData] {
+        return fetchedResultsController.fetchedObjects ?? []
+    }
     
     // MARK: - Private Properties
     private let context: NSManagedObjectContext
@@ -44,6 +47,30 @@ final class TrackerCategoryStore: NSObject {
         self.context = context
         super.init()
         try? fetchedResultsController.performFetch()
+    }
+    
+    // MARK: - Public Methods
+    func addNewCategory(_ category: TrackerCategory) throws {
+        let categoryCoreData = TrackerCategoryCoreData(context: context)
+        categoryCoreData.title = category.title
+        categoryCoreData.trackers = NSSet()
+        
+        try context.save()
+    }
+    
+    func deleteCategory(at index: Int) throws {
+        let objects = fetchedResultsController.fetchedObjects ?? []
+        guard index < objects.count else { return }
+        
+        let categoryToDelete = objects[index]
+        context.delete(categoryToDelete)
+        try context.save()
+    }
+    
+    static func makeDefaultStore() -> TrackerCategoryStore? {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return nil }
+        let context = appDelegate.persistentContainer.viewContext
+        return TrackerCategoryStore(context: context)
     }
 }
 
@@ -80,4 +107,3 @@ extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
         delegate?.store(self, didUpdate: update)
     }
 }
-

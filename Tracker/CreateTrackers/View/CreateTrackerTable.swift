@@ -1,38 +1,37 @@
-import Foundation
 import UIKit
 
 // MARK: - UITableViewDataSource & UITableViewDelegate
 extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return UIConstants.optionsTableRowsCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell: UITableViewCell
-        if let dequeuedCell = tableView.dequeueReusableCell(withIdentifier: UIConstants.cellIdentifier) {
-            cell = dequeuedCell
-        } else {
-            cell = UITableViewCell(style: .subtitle, reuseIdentifier: UIConstants.cellIdentifier)
-        }
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: UIConstants.cellIdentifier)
         
         cell.backgroundColor = .clear
         cell.selectionStyle = .none
         
-        cell.textLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        cell.textLabel?.font = UIFont.systemFont(ofSize: UIConstants.categoryTextFieldFontSize, weight: .regular)
         cell.textLabel?.textColor = UIColor(resource: .blackDay)
         
-        if indexPath.row == 0 {
+        if indexPath.row == UIConstants.categoryRowIndex {
             cell.textLabel?.text = UIConstants.Strings.category
-            cell.detailTextLabel?.text = nil
+            if !selectedCategoryTitle.isEmpty {
+                cell.detailTextLabel?.text = selectedCategoryTitle
+                cell.detailTextLabel?.font = UIFont.systemFont(ofSize: UIConstants.categoryTextFieldFontSize, weight: .regular)
+                cell.detailTextLabel?.textColor = UIColor(resource: .gray)
+            } else {
+                cell.detailTextLabel?.text = nil
+            }
         } else {
             cell.textLabel?.text = UIConstants.Strings.schedule
-        
+            
             if !selectedDays.isEmpty {
                 cell.detailTextLabel?.text = formatSelectedDays(selectedDays)
-                cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-                cell.detailTextLabel?.textColor = .gray
+                cell.detailTextLabel?.font = UIFont.systemFont(ofSize: UIConstants.categoryTextFieldFontSize, weight: .regular)
+                cell.detailTextLabel?.textColor = UIColor(resource: .gray)
             } else {
                 cell.detailTextLabel?.text = nil
             }
@@ -42,25 +41,50 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
         chevronImageView.tintColor = UIColor(resource: .grayYP)
         cell.accessoryView = chevronImageView
         
-        if indexPath.row == 1 {
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10000)
+        if indexPath.row == UIConstants.scheduleRowIndex {
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
         } else {
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+            cell.separatorInset = UIEdgeInsets(
+                top: 0,
+                left: UIConstants.leadingPadding,
+                bottom: 0,
+                right: UIConstants.leadingPadding
+            )
         }
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 75
+        return UIConstants.menuCellHeight
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        if indexPath.row == 0 {
+        if indexPath.row == UIConstants.categoryRowIndex {
+            guard let trackerCategoryStore = TrackerCategoryStore.makeDefaultStore() else { return }
             
-        } else if indexPath.row == 1 {
+            let categoryListViewModel = CategoryListViewModel(trackerCategoryStore: trackerCategoryStore)
+            
+            categoryListViewModel.onCategorySelected = { [weak self] categoryTitle in
+                guard let self else { return }
+                self.selectedCategoryTitle = categoryTitle
+                self.optionsTableView.reloadData()
+                self.validateForm()
+            }
+            
+            let categoryVC = CategoryViewController(viewModel: categoryListViewModel)
+            categoryVC.selectedCategoryTitle = self.selectedCategoryTitle
+            
+            if let navigationController = navigationController {
+                navigationController.pushViewController(categoryVC, animated: true)
+            } else {
+                let navController = UINavigationController(rootViewController: categoryVC)
+                present(navController, animated: true, completion: nil)
+            }
+            
+        } else if indexPath.row == UIConstants.scheduleRowIndex {
             let scheduleVC = ScheduleViewController()
             scheduleVC.delegate = self
             
@@ -90,11 +114,11 @@ extension CreateTrackerViewController: UITextFieldDelegate {
         
         self.trackerName = updatedText
         
-        if updatedText.count > 38 {
+        if updatedText.count > UIConstants.maxTrackerNameLength {
             errorLabel.isHidden = false
             optionsTableViewTopConstraint?.constant = UIConstants.tableViewTopErrorOffset
             
-            if currentText.count == 38 && !string.isEmpty {
+            if currentText.count == UIConstants.maxTrackerNameLength && !string.isEmpty {
                 return false
             }
         } else {
@@ -109,9 +133,9 @@ extension CreateTrackerViewController: UITextFieldDelegate {
 
 // MARK: - Private Methods
 private extension CreateTrackerViewController {
-   
+    
     func formatSelectedDays(_ days: [WeekDay]) -> String {
-        if days.count == 7 {
+        if days.count == UIConstants.daysInWeekCount {
             return UIConstants.Strings.everyDay
         }
         
@@ -129,4 +153,3 @@ private extension CreateTrackerViewController {
         return shortNames.joined(separator: ", ")
     }
 }
-

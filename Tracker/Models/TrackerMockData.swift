@@ -21,5 +21,3 @@ final class TrackerMockData {
         return [testCategory]
     }
 }
-
-
