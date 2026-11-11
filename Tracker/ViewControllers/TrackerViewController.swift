@@ -1,12 +1,11 @@
-import Foundation
 import UIKit
 
-final class TrackerViewController: UIViewController {
+final class TrackerViewController: UIViewController, TrackerStoreDelegate {
     
     // MARK: - Properties
     private let trackerStore: TrackerStore
     private let trackerCategoryStore: TrackerCategoryStore
-    private let trackerRecordStore: TrackerRecordStore
+    let trackerRecordStore: TrackerRecordStore
     
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
@@ -70,22 +69,33 @@ final class TrackerViewController: UIViewController {
     
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let collection = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: layout
+        )
         collection.translatesAutoresizingMaskIntoConstraints = false
         collection.backgroundColor = .clear
         return collection
     }()
     
     // MARK: - Initializers
-    init(trackerStore: TrackerStore, trackerCategoryStore: TrackerCategoryStore, trackerRecordStore: TrackerRecordStore) {
+    init(
+        trackerStore: TrackerStore,
+        trackerCategoryStore: TrackerCategoryStore,
+        trackerRecordStore: TrackerRecordStore
+    ) {
         self.trackerStore = trackerStore
         self.trackerCategoryStore = trackerCategoryStore
         self.trackerRecordStore = trackerRecordStore
+        
         super.init(nibName: nil, bundle: nil)
+        
+        self.trackerStore.delegate = self
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        nil
     }
     
     // MARK: - Lifecycle
@@ -99,7 +109,8 @@ final class TrackerViewController: UIViewController {
         )
         collectionView.register(
             TrackerHeaderView.self,
-            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            forSupplementaryViewOfKind: UICollectionView
+                .elementKindSectionHeader,
             withReuseIdentifier: TrackerHeaderView.identifier
         )
         
@@ -111,9 +122,7 @@ final class TrackerViewController: UIViewController {
         setupBackgroundImage()
         setupSubtitleLabel()
         
-        self.categories = trackerCategoryStore.categories
         self.completedTrackers = trackerRecordStore.records
-        
         filterTrackers(for: currentDate)
     }
     
@@ -133,59 +142,45 @@ final class TrackerViewController: UIViewController {
         present(createTrackerVC, animated: true)
     }
     
-    func filterTrackers(for date: Date) {
-        var calendar = Calendar.current
-        calendar.firstWeekday = 2
+    private func filterTrackers(for date: Date) {
+        let calendar = Calendar.current
+        let weekDayComponent = calendar.component(.weekday, from: date)
+        let targetRawValue = weekDayComponent == 1 ? 7 : weekDayComponent - 1
         
-        let weekDayIndex = calendar.component(.weekday, from: date)
-        let targetWeekDay = weekDayIndex == 1 ? WeekDay.sunday : WeekDay(rawValue: weekDayIndex - 1)
+        guard let currentWeekDay = WeekDay(rawValue: targetRawValue) else {
+            return
+        }
         
-        guard let currentWeekDay = targetWeekDay else { return }
-        let searchText = searchTextField.text?.lowercased() ?? ""
+        let searchText = (searchTextField.text ?? "").lowercased()
+        let allCategories = trackerCategoryStore.categories
         
-        visibleCategories = categories.compactMap { category in
+        self.visibleCategories = allCategories.compactMap { category in
             let filteredTrackers = category.trackers.filter { tracker in
                 let matchesDate = tracker.schedule.contains(currentWeekDay)
                 let matchesSearch = searchText.isEmpty || tracker.name.lowercased().contains(searchText)
                 return matchesDate && matchesSearch
             }
             
-            if filteredTrackers.isEmpty { return nil }
+            guard !filteredTrackers.isEmpty else { return nil }
             return TrackerCategory(title: category.title, trackers: filteredTrackers)
         }
         
-        let isTrackersListEmpty = visibleCategories.isEmpty
-        backgroundImage.isHidden = isTrackersListEmpty == false
-        subtitleLabel.isHidden = isTrackersListEmpty == false
-        
         collectionView.reloadData()
+        
+        let isTrackersEmpty = visibleCategories.isEmpty
+        backgroundImage.isHidden = !isTrackersEmpty
+        subtitleLabel.isHidden = !isTrackersEmpty
     }
 }
 
 // MARK: - CreateTrackerViewControllerDelegate
 extension TrackerViewController: CreateTrackerViewControllerDelegate {
     func didCreateTracker(_ tracker: Tracker, toCategory title: String) {
-        var newCategories: [TrackerCategory] = []
-        var categoryFound = false
-        
-        for category in categories {
-            if category.title == title {
-                var updatedTrackers = category.trackers
-                updatedTrackers.append(tracker)
-                let updatedCategory = TrackerCategory(title: category.title, trackers: updatedTrackers)
-                newCategories.append(updatedCategory)
-                categoryFound = true
-            } else {
-                newCategories.append(category)
-            }
-        }
-        
-        if !categoryFound {
-            let newCategory = TrackerCategory(title: title, trackers: [tracker])
-            newCategories.append(newCategory)
-        }
-        
-        self.categories = newCategories
+        trackerStore.addNewTracker(tracker, toCategory: title)
+        filterTrackers(for: currentDate)
+    }
+    
+    func store(_ store: TrackerStore, didUpdate update: TrackerStoreUpdate) {
         filterTrackers(for: currentDate)
     }
 }

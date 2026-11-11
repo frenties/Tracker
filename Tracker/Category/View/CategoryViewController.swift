@@ -113,7 +113,7 @@ final class CategoryViewController: UIViewController {
         
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: UIConstants.cellIdentifier)
+        tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: CategoryTableViewCell.identifier)
         
         let heightConstraint = tableView.heightAnchor.constraint(equalToConstant: 0)
         heightConstraint.priority = .defaultHigh
@@ -151,15 +151,15 @@ extension CategoryViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: UIConstants.cellIdentifier, for: indexPath)
-        let categoryTitle = viewModel.categories[indexPath.row].title
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: CategoryTableViewCell.identifier,
+            for: indexPath
+        ) as? CategoryTableViewCell else {
+            return UITableViewCell()
+        }
         
-        cell.textLabel?.text = categoryTitle
-        cell.textLabel?.font = UIFont.systemFont(ofSize: UIConstants.categoryTextFieldFontSize, weight: .regular)
-        cell.textLabel?.textColor = UIColor(resource: .blackDay)
-        cell.backgroundColor = .clear
-        cell.selectionStyle = .none
-        cell.accessoryType = (categoryTitle == selectedCategoryTitle) ? .checkmark : .none
+        let categoryTitle = viewModel.categories[indexPath.row].title
+        cell.configure(with: categoryTitle, isSelected: categoryTitle == selectedCategoryTitle)
         
         if indexPath.row == viewModel.categories.count - 1 {
             cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)

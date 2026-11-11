@@ -1,4 +1,3 @@
-import Foundation
 import UIKit
 
 final class CreateTrackerHeaderView: UICollectionReusableView {
@@ -18,8 +17,9 @@ final class CreateTrackerHeaderView: UICollectionReusableView {
         setupViews()
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        nil
     }
     
     // MARK: - Setup UI

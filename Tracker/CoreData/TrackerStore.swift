@@ -1,6 +1,6 @@
-import Foundation
 import UIKit
 import CoreData
+import OSLog
 
 // MARK: - TrackerStoreUpdate
 struct TrackerStoreUpdate {
@@ -20,11 +20,33 @@ final class TrackerStore: NSObject {
     // MARK: - Public Properties
     weak var delegate: TrackerStoreDelegate?
     
+    var trackers: [Tracker] {
+        guard let objects = fetchedResultsController.fetchedObjects else { return [] }
+        return objects.compactMap { coreDataTracker in
+            let daysComponents = (coreDataTracker.value(forKey: "schedule") as? String ?? "").components(separatedBy: ",")
+            let schedule = daysComponents.compactMap { Int($0) }.compactMap { WeekDay(rawValue: $0) }
+            
+            let colorIndex = Int(coreDataTracker.color ?? "0") ?? 0
+            let color = (colorIndex >= 0 && colorIndex < UIConstants.colors.count)
+                ? UIConstants.colors[colorIndex]
+                : UIConstants.colors[0]
+            
+            return Tracker(
+                id: coreDataTracker.id ?? UUID(),
+                name: coreDataTracker.name ?? "",
+                color: color,
+                emoji: coreDataTracker.emoji ?? "🙂",
+                schedule: schedule
+            )
+        }
+    }
+    
     // MARK: - Private Properties
     private let context: NSManagedObjectContext
     private var insertedIndexes: IndexSet = []
     private var deletedIndexes: IndexSet = []
     private var updatedIndexes: IndexSet = []
+    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.tracker.app", category: "TrackerStore")
     
     private lazy var fetchedResultsController: NSFetchedResultsController<TrackerCoreData> = {
         let fetchRequest = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
@@ -41,7 +63,7 @@ final class TrackerStore: NSObject {
         do {
             try controller.performFetch()
         } catch {
-            print("Failed to perform fetch in TrackerStore: \(error)")
+            logger.error("Failed to perform fetch in TrackerStore: \(error.localizedDescription)")
         }
         
         return controller
@@ -52,6 +74,38 @@ final class TrackerStore: NSObject {
         self.context = context
         super.init()
         try? fetchedResultsController.performFetch()
+    }
+    
+    // MARK: - Public Methods
+    func addNewTracker(_ tracker: Tracker, toCategory categoryTitle: String) {
+        let trackerCoreData = TrackerCoreData(context: context)
+        
+        trackerCoreData.id = tracker.id
+        trackerCoreData.name = tracker.name
+        trackerCoreData.emoji = tracker.emoji
+        
+        let colorIndex = UIConstants.colors.firstIndex(where: { $0.cgColor == tracker.color.cgColor }) ?? 0
+        trackerCoreData.color = String(colorIndex)
+        
+        trackerCoreData.setValue(convertScheduleToString(tracker.schedule), forKey: "schedule")
+        
+        let categoryFetchRequest: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
+        categoryFetchRequest.predicate = NSPredicate(format: "title == %@", categoryTitle)
+        
+        if let existingCategory = try? context.fetch(categoryFetchRequest).first {
+            trackerCoreData.category = existingCategory
+        } else {
+            let newCategory = TrackerCategoryCoreData(context: context)
+            newCategory.title = categoryTitle
+            trackerCoreData.category = newCategory
+        }
+        
+        CoreDataStack.shared.saveContext()
+    }
+    
+    // MARK: - Private Methods
+    private func convertScheduleToString(_ schedule: [WeekDay]) -> String {
+        schedule.map { "\($0.rawValue)" }.joined(separator: ",")
     }
 }
 
@@ -92,4 +146,3 @@ extension TrackerStore: NSFetchedResultsControllerDelegate {
         delegate?.store(self, didUpdate: update)
     }
 }
-

@@ -22,6 +22,36 @@ final class TrackerCategoryStore: NSObject {
         return fetchedResultsController.fetchedObjects ?? []
     }
     
+    var categories: [TrackerCategory] {
+        try? fetchedResultsController.performFetch()
+        guard let objects = fetchedResultsController.fetchedObjects else { return [] }
+        
+        return objects.compactMap { categoryCoreData in
+            guard let title = categoryCoreData.title else { return nil }
+            
+            let trackersSet = categoryCoreData.trackers as? Set<TrackerCoreData> ?? []
+            let trackers: [Tracker] = trackersSet.compactMap { coreDataTracker in
+                let daysComponents = (coreDataTracker.value(forKey: "schedule") as? String ?? "").components(separatedBy: ",")
+                let schedule = daysComponents.compactMap { Int($0) }.compactMap { WeekDay(rawValue: $0) }
+                
+                let colorIndex = Int(coreDataTracker.color ?? "0") ?? 0
+                let color = (colorIndex >= 0 && colorIndex < UIConstants.colors.count)
+                ? UIConstants.colors[colorIndex]
+                : UIConstants.colors[0]
+                
+                return Tracker(
+                    id: coreDataTracker.id ?? UUID(),
+                    name: coreDataTracker.name ?? "",
+                    color: color,
+                    emoji: coreDataTracker.emoji ?? "🙂",
+                    schedule: schedule
+                )
+            }
+            
+            return TrackerCategory(title: title, trackers: trackers)
+        }
+    }
+    
     // MARK: - Private Properties
     private let context: NSManagedObjectContext
     private var insertedIndexes: IndexSet = []
@@ -68,9 +98,7 @@ final class TrackerCategoryStore: NSObject {
     }
     
     static func makeDefaultStore() -> TrackerCategoryStore? {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return nil }
-        let context = appDelegate.persistentContainer.viewContext
-        return TrackerCategoryStore(context: context)
+        return TrackerCategoryStore(context: CoreDataStack.shared.context)
     }
 }
 

@@ -1,4 +1,3 @@
-import Foundation
 import UIKit
 import CoreData
 
@@ -26,11 +25,11 @@ final class TabBarController: UITabBarController {
     
     // MARK: - Setup UI
     private func setupTabs() {
-
+        
         let trackerStore = TrackerStore(context: context)
         let trackerCategoryStore = TrackerCategoryStore(context: context)
         let trackerRecordStore = TrackerRecordStore(context: context)
-
+        
         let trackerViewController = TrackerViewController(
             trackerStore: trackerStore,
             trackerCategoryStore: trackerCategoryStore,

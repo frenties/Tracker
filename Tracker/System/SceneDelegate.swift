@@ -1,44 +1,60 @@
 import UIKit
-import CoreData
 
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
+    // MARK: - Private Constants
+    private enum Constants {
+        static let hasCompletedOnboardingKey = "hasCompletedOnboarding"
+    }
+    
+    // MARK: - Properties
     var window: UIWindow?
     
-    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+    // MARK: - UISceneDelegate
+    func scene(
+        _ scene: UIScene,
+        willConnectTo session: UISceneSession,
+        options connectionOptions: UIScene.ConnectionOptions
+    ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         window = UIWindow(windowScene: windowScene)
         
-        let onboardingVC = OnboardingViewController()
+        let hasCompletedOnboarding = UserDefaults.standard.bool(forKey: Constants.hasCompletedOnboardingKey)
         
-        onboardingVC.onCompletion = { [weak self] in
-            self?.switchToMainScreenAnimated()
+        if hasCompletedOnboarding {
+            let context = CoreDataStack.shared.context
+            window?.rootViewController = TabBarController(context: context)
+        } else {
+            let onboardingVC = OnboardingViewController()
+            onboardingVC.onCompletion = { [weak self] in
+                UserDefaults.standard.set(true, forKey: Constants.hasCompletedOnboardingKey)
+                self?.switchToMainScreenAnimated()
+            }
+            window?.rootViewController = onboardingVC
         }
         
-        window?.rootViewController = onboardingVC
         window?.makeKeyAndVisible()
     }
     
     // MARK: - Private Methods
     private func switchToMainScreenAnimated() {
-        guard let window = window,
-              let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        guard let window = window else { return }
         
-        let context = appDelegate.persistentContainer.viewContext
-        
+        let context = CoreDataStack.shared.context
         window.rootViewController = TabBarController(context: context)
         
-        UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: nil)
+        UIView.transition(
+            with: window,
+            duration: 0.3,
+            options: .transitionCrossDissolve,
+            animations: nil
+        )
     }
     
-    func sceneDidDisconnect(_ scene: UIScene) {}
-    
-    func sceneDidBecomeActive(_ scene: UIScene) {}
-    
-    func sceneWillResignActive(_ scene: UIScene) {}
-    
-    func sceneWillEnterForeground(_ scene: UIScene) {}
-    
-    func sceneDidEnterBackground(_ scene: UIScene) {}
+    func sceneDidDisconnect(_ scene: UIScene) { }
+    func sceneDidBecomeActive(_ scene: UIScene) { }
+    func sceneWillResignActive(_ scene: UIScene) { }
+    func sceneWillEnterForeground(_ scene: UIScene) { }
+    func sceneDidEnterBackground(_ scene: UIScene) { }
 }
