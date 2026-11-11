@@ -19,7 +19,7 @@ final class TrackerCategoryStore: NSObject {
     weak var delegate: TrackerCategoryStoreDelegate?
     
     var fetchedCategories: [TrackerCategoryCoreData] {
-        return fetchedResultsController.fetchedObjects ?? []
+        fetchedResultsController.fetchedObjects ?? []
     }
     
     var categories: [TrackerCategory] {

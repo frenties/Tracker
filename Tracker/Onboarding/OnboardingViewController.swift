@@ -7,12 +7,12 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
     
     private lazy var pages: [UIViewController] = {
         let firstPage = OnboardingPageViewController(
-            imageName: "firstpage",
+            imageResource: .firstpage,
             titleText: "Отслеживайте только то, что хотите"
         )
         
         let secondPage = OnboardingPageViewController(
-            imageName: "secondpage",
+            imageResource: .secondpage,
             titleText: "Даже если это не литры воды и йога"
         )
         
@@ -39,8 +39,9 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        nil
     }
     
     // MARK: - Lifecycle
@@ -104,4 +105,3 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         }
     }
 }
-

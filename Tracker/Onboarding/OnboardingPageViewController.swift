@@ -4,7 +4,7 @@ final class OnboardingPageViewController: UIViewController {
     
     // MARK: - Properties
     var onConfirmButtonTapped: (() -> Void)?
-    private let imageName: String
+    private let imageResource: ImageResource
     private let titleText: String
     
     // MARK: - UI Elements
@@ -35,8 +35,8 @@ final class OnboardingPageViewController: UIViewController {
     }()
     
     // MARK: - Initializers
-    init(imageName: String, titleText: String) {
-        self.imageName = imageName
+    init(imageResource: ImageResource, titleText: String) {
+        self.imageResource = imageResource
         self.titleText = titleText
         super.init(nibName: nil, bundle: nil)
     }
@@ -54,7 +54,7 @@ final class OnboardingPageViewController: UIViewController {
     
     // MARK: - Private Methods
     private func setupViews() {
-        backgroundImageView.image = UIImage(named: imageName)
+        backgroundImageView.image = UIImage(resource: imageResource)
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.minimumLineHeight = UIConstants.onboardingTitleLineHeight
