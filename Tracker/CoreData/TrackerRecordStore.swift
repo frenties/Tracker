@@ -17,7 +17,7 @@ final class TrackerRecordStore: NSObject {
     
     // MARK: - Public Properties
     weak var delegate: TrackerRecordStoreDelegate?
-
+    
     var records: [TrackerRecord] {
         guard let objects = fetchedResultsController.fetchedObjects else { return [] }
         return objects.map { coreDataRecord in
@@ -67,7 +67,7 @@ final class TrackerRecordStore: NSObject {
     
     func removeRecord(_ record: TrackerRecord) {
         let fetchRequest = NSFetchRequest<TrackerRecordCoreData>(entityName: "TrackerRecordCoreData")
-   
+        
         let dateStart = Calendar.current.startOfDay(for: record.date)
         
         fetchRequest.predicate = NSPredicate(
@@ -83,7 +83,7 @@ final class TrackerRecordStore: NSObject {
             CoreDataStack.shared.saveContext()
         }
     }
-
+    
 }
 
 // MARK: - NSFetchedResultsControllerDelegate
@@ -119,4 +119,3 @@ extension TrackerRecordStore: NSFetchedResultsControllerDelegate {
         delegate?.store(self, didUpdate: update)
     }
 }
-

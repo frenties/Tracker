@@ -14,6 +14,7 @@ final class CreateTrackerViewController: UIViewController {
     
     var selectedEmojiIndex: Int?
     var selectedColorIndex: Int?
+    var selectedCategoryTitle: String = ""
     var trackerName: String = ""
     
     // MARK: - UI Elements
@@ -33,8 +34,8 @@ final class CreateTrackerViewController: UIViewController {
     let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Новая привычка"
-        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        label.text = UIConstants.Strings.newHabitTitle
+        label.font = UIFont.systemFont(ofSize: UIConstants.categoryTitleFontSize, weight: .medium)
         label.textColor = UIColor(resource: .blackDay)
         label.textAlignment = .center
         return label
@@ -43,10 +44,10 @@ final class CreateTrackerViewController: UIViewController {
     let nameTextField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = "Введите название трекера"
+        textField.placeholder = UIConstants.Strings.trackerNamePlaceholder
         textField.backgroundColor = UIColor(resource: .backgroundDay)
         textField.layer.cornerRadius = UIConstants.cornerRadius
-        textField.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        textField.font = UIFont.systemFont(ofSize: UIConstants.categoryTextFieldFontSize, weight: .regular)
         
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: UIConstants.textFieldPadding, height: 0))
         textField.leftView = paddingView
@@ -62,7 +63,12 @@ final class CreateTrackerViewController: UIViewController {
         tableView.layer.cornerRadius = UIConstants.cornerRadius
         tableView.isScrollEnabled = false
         tableView.separatorStyle = .singleLine
-        tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        tableView.separatorInset = UIEdgeInsets(
+            top: 0,
+            left: UIConstants.leadingPadding,
+            bottom: 0,
+            right: UIConstants.leadingPadding
+        )
         return tableView
     }()
     
@@ -78,10 +84,10 @@ final class CreateTrackerViewController: UIViewController {
     let cancelButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Отменить", for: .normal)
+        button.setTitle(UIConstants.Strings.cancelButtonTitle, for: .normal)
         button.setTitleColor(UIColor(resource: .redYP), for: .normal)
         button.layer.cornerRadius = UIConstants.cornerRadius
-        button.layer.borderWidth = 1
+        button.layer.borderWidth = UIConstants.cancelButtonBorderWidth
         button.layer.borderColor = UIColor(resource: .redYP).cgColor
         button.backgroundColor = .clear
         return button
@@ -90,7 +96,7 @@ final class CreateTrackerViewController: UIViewController {
     let createButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Создать", for: .normal)
+        button.setTitle(UIConstants.Strings.createButtonTitle, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = UIConstants.cornerRadius
         button.backgroundColor = .lightGray
@@ -101,9 +107,9 @@ final class CreateTrackerViewController: UIViewController {
     let errorLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Ограничение 38 символов"
+        label.text = UIConstants.Strings.nameLengthError
         label.textColor = UIColor(resource: .redYP)
-        label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        label.font = UIFont.systemFont(ofSize: UIConstants.categoryTextFieldFontSize, weight: .regular)
         label.textAlignment = .center
         label.isHidden = true
         return label
@@ -154,7 +160,7 @@ final class CreateTrackerViewController: UIViewController {
             titleLabel.widthAnchor.constraint(equalToConstant: UIConstants.titleWidth),
             titleLabel.heightAnchor.constraint(equalToConstant: UIConstants.titleHeight),
             
-            scrollView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 24),
+            scrollView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: UIConstants.scrollViewTopOffset),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
@@ -165,7 +171,7 @@ final class CreateTrackerViewController: UIViewController {
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
-            nameTextField.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
+            nameTextField.topAnchor.constraint(equalTo: contentView.topAnchor),
             nameTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: UIConstants.leadingPadding),
             nameTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: UIConstants.trailingPadding),
             nameTextField.heightAnchor.constraint(equalToConstant: UIConstants.textFieldHeight),
@@ -180,12 +186,12 @@ final class CreateTrackerViewController: UIViewController {
             optionsTableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: UIConstants.trailingPadding),
             optionsTableView.heightAnchor.constraint(equalToConstant: UIConstants.tableViewHeight),
             
-            collectionView.topAnchor.constraint(equalTo: optionsTableView.bottomAnchor, constant: 32),
+            collectionView.topAnchor.constraint(equalTo: optionsTableView.bottomAnchor, constant: UIConstants.collectionViewTopOffset),
             collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: UIConstants.leadingPadding),
             collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: UIConstants.trailingPadding),
-            collectionView.heightAnchor.constraint(equalToConstant: 460),
+            collectionView.heightAnchor.constraint(equalToConstant: UIConstants.collectionViewHeight),
             
-            cancelButton.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 16),
+            cancelButton.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: UIConstants.buttonsTopOffset),
             cancelButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: UIConstants.buttonLeadingPadding),
             cancelButton.widthAnchor.constraint(equalToConstant: UIConstants.buttonWidth),
             cancelButton.heightAnchor.constraint(equalToConstant: UIConstants.buttonHeight),
@@ -195,7 +201,6 @@ final class CreateTrackerViewController: UIViewController {
             createButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: UIConstants.buttonTrailingPadding),
             createButton.widthAnchor.constraint(equalToConstant: UIConstants.buttonWidth),
             createButton.heightAnchor.constraint(equalToConstant: UIConstants.buttonHeight)
-            
         ])
     }
     
@@ -204,21 +209,22 @@ final class CreateTrackerViewController: UIViewController {
         optionsTableView.delegate = self
         optionsTableView.register(UITableViewCell.self, forCellReuseIdentifier: UIConstants.cellIdentifier)
     }
-    
     private func setupCollectionView() {
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.estimatedItemSize = .zero
-            layout.itemSize = CGSize(width: 52, height: 52)
-            layout.minimumInteritemSpacing = 0
-            layout.minimumLineSpacing = 0
-            
-            layout.sectionInset = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
-            layout.headerReferenceSize = CGSize(width: collectionView.bounds.width, height: 34)
+            layout.itemSize = CGSize(width: UIConstants.collectionItemSize, height: UIConstants.collectionItemSize)
+            layout.minimumInteritemSpacing = UIConstants.collectionInterItemSpacing
+            layout.minimumLineSpacing = UIConstants.collectionInterItemSpacing
+            layout.sectionInset = UIEdgeInsets(
+                top: UIConstants.emojiSectionTopInset,
+                left: UIConstants.leadingPadding,
+                bottom: UIConstants.collectionSectionBottomInset,
+                right: UIConstants.leadingPadding
+            )
+            layout.headerReferenceSize = CGSize(width: collectionView.bounds.width, height: UIConstants.collectionHeaderHeight)
         }
-        
         collectionView.dataSource = self
         collectionView.delegate = self
-        
         collectionView.register(CreateTrackerEmojiCell.self, forCellWithReuseIdentifier: UIConstants.emojiCellIdentifier)
         collectionView.register(CreateTrackerColorCell.self, forCellWithReuseIdentifier: UIConstants.colorCellIdentifier)
         collectionView.register(
@@ -226,10 +232,8 @@ final class CreateTrackerViewController: UIViewController {
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: UIConstants.headerIdentifier
         )
-        
     }
     
-    // MARK: - Validation
     func validateForm() {
         let isNameValid = !trackerName.isEmpty
         let isScheduleValid = !selectedDays.isEmpty
@@ -240,10 +244,14 @@ final class CreateTrackerViewController: UIViewController {
         createButton.backgroundColor = isFormValid ? UIColor(resource: .blackDay) : .lightGray
     }
     // MARK: - Actions
+    @objc private func cancelButtonTapped() {
+        dismiss(animated: true)
+    }
     @objc private func createButtonTapped() {
         guard !trackerName.isEmpty,
               let emojiIndex = selectedEmojiIndex,
-              let colorIndex = selectedColorIndex else { return }
+              let colorIndex = selectedColorIndex,
+              !selectedCategoryTitle.isEmpty else { return }
         let newTracker = Tracker(
             id: UUID(),
             name: trackerName,
@@ -251,15 +259,7 @@ final class CreateTrackerViewController: UIViewController {
             emoji: UIConstants.emojis[emojiIndex],
             schedule: selectedDays
         )
-        let trackerStore = TrackerStore(context: CoreDataStack.shared.context)
-        trackerStore.addNewTracker(newTracker)
-        
-        delegate?.didCreateTracker(newTracker, toCategory: "Важное")
+        delegate?.didCreateTracker(newTracker, toCategory: selectedCategoryTitle)
         dismiss(animated: true)
     }
-    
-    @objc private func cancelButtonTapped() {
-        dismiss(animated: true)
-    }
-    
 }

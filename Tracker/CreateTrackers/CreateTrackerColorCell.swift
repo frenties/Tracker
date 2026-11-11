@@ -1,4 +1,3 @@
-import Foundation
 import UIKit
 
 final class CreateTrackerColorCell: UICollectionViewCell {
@@ -7,7 +6,7 @@ final class CreateTrackerColorCell: UICollectionViewCell {
     private let colorView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 8
+        view.layer.cornerRadius = UIConstants.colorViewCornerRadius
         view.clipsToBounds = true
         return view
     }()
@@ -30,12 +29,12 @@ final class CreateTrackerColorCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             colorView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             colorView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            colorView.widthAnchor.constraint(equalToConstant: 40),
-            colorView.heightAnchor.constraint(equalToConstant: 40)
+            colorView.widthAnchor.constraint(equalToConstant: UIConstants.colorViewSize),
+            colorView.heightAnchor.constraint(equalToConstant: UIConstants.colorViewSize)
         ])
         
-        layer.cornerRadius = 12
-        layer.borderWidth = 3
+        layer.cornerRadius = UIConstants.colorCellCornerRadius
+        layer.borderWidth = UIConstants.colorCellBorderWidth
         layer.borderColor = UIColor.clear.cgColor
     }
     
@@ -45,6 +44,8 @@ final class CreateTrackerColorCell: UICollectionViewCell {
     }
     
     func setSelection(isSelected: Bool, with color: UIColor) {
-        layer.borderColor = isSelected ? color.withAlphaComponent(0.3).cgColor : UIColor.clear.cgColor
+        layer.borderColor = isSelected
+        ? color.withAlphaComponent(UIConstants.colorCellSelectionAlpha).cgColor
+        : UIColor.clear.cgColor
     }
 }
