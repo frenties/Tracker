@@ -12,8 +12,9 @@ final class TabBarController: UITabBarController {
         super.init(nibName: nil, bundle: nil)
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        nil
     }
     
     // MARK: - Lifecycle
@@ -25,7 +26,6 @@ final class TabBarController: UITabBarController {
     
     // MARK: - Setup UI
     private func setupTabs() {
-        
         let trackerStore = TrackerStore(context: context)
         let trackerCategoryStore = TrackerCategoryStore(context: context)
         let trackerRecordStore = TrackerRecordStore(context: context)
@@ -38,16 +38,19 @@ final class TabBarController: UITabBarController {
         let trackerNavigationController = UINavigationController(rootViewController: trackerViewController)
         
         trackerNavigationController.tabBarItem = UITabBarItem(
-            title: "Трекеры",
-            image: UIImage(resource: .trackersIteam),
+            title: String(localized: "tab_trackers"),
+            image: Asset.trackersIteam.image,
             selectedImage: nil
         )
         
-        let statisticViewController = StatisticViewController()
+        let statisticViewController = StatisticViewController(
+            trackerRecordStore: trackerRecordStore,
+            trackerCategoryStore: trackerCategoryStore
+        )
         
         statisticViewController.tabBarItem = UITabBarItem(
-            title: "Статистика",
-            image: UIImage(resource: .statisticItem),
+            title: String(localized: "tab_statistic"),
+            image: Asset.statisticItem.image,
             selectedImage: nil
         )
         
@@ -55,11 +58,18 @@ final class TabBarController: UITabBarController {
     }
     
     private func setupTabBar() {
-        view.backgroundColor = .white
-        tabBar.backgroundColor = .white
+        view.backgroundColor = Asset.whiteDay.color
+        tabBar.backgroundColor = Asset.whiteDay.color
         
-        tabBar.tintColor = UIColor(resource: .blueYP)
-        tabBar.unselectedItemTintColor = UIColor(resource: .grayYP)
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = Asset.whiteDay.color
+        appearance.shadowColor = Asset.grayYP.color
+        
+        tabBar.standardAppearance = appearance
+        tabBar.scrollEdgeAppearance = appearance
+        
+        tabBar.tintColor = Asset.blueYP.color
+        tabBar.unselectedItemTintColor = Asset.grayYP.color
     }
 }
-

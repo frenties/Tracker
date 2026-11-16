@@ -44,7 +44,8 @@ final class TrackerCategoryStore: NSObject {
                     name: coreDataTracker.name ?? "",
                     color: color,
                     emoji: coreDataTracker.emoji ?? "🙂",
-                    schedule: schedule
+                    schedule: schedule,
+                    isPinned: coreDataTracker.isPinned
                 )
             }
             

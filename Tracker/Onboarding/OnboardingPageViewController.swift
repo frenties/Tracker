@@ -4,7 +4,7 @@ final class OnboardingPageViewController: UIViewController {
     
     // MARK: - Properties
     var onConfirmButtonTapped: (() -> Void)?
-    private let imageResource: ImageResource
+    private let imageAsset: ImageAsset
     private let titleText: String
     
     // MARK: - UI Elements
@@ -24,10 +24,10 @@ final class OnboardingPageViewController: UIViewController {
     
     private lazy var confirmButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = .blackDay
-        button.setTitle("Вот это технологии!", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-        button.setTitleColor(.whiteDay, for: .normal)
+        button.backgroundColor = Asset.blackDay.color
+        button.setTitle(String(localized: "onboarding_button"), for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: UIConstants.categoryButtonFontSize, weight: .medium)
+        button.setTitleColor(Asset.whiteDay.color, for: .normal)
         button.layer.cornerRadius = UIConstants.cornerRadius
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -35,14 +35,15 @@ final class OnboardingPageViewController: UIViewController {
     }()
     
     // MARK: - Initializers
-    init(imageResource: ImageResource, titleText: String) {
-        self.imageResource = imageResource
+    init(imageAsset: ImageAsset, titleText: String) {
+        self.imageAsset = imageAsset
         self.titleText = titleText
         super.init(nibName: nil, bundle: nil)
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        nil
     }
     
     // MARK: - Lifecycle
@@ -54,7 +55,7 @@ final class OnboardingPageViewController: UIViewController {
     
     // MARK: - Private Methods
     private func setupViews() {
-        backgroundImageView.image = UIImage(resource: imageResource)
+        backgroundImageView.image = imageAsset.image
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.minimumLineHeight = UIConstants.onboardingTitleLineHeight
@@ -63,7 +64,7 @@ final class OnboardingPageViewController: UIViewController {
         
         let attributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: UIConstants.onboardingTitleFontSize, weight: .bold),
-            .foregroundColor: UIColor.blackDay,
+            .foregroundColor: Asset.blackDay.color,
             .paragraphStyle: paragraphStyle
         ]
         

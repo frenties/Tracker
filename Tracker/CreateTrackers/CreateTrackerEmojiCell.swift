@@ -37,11 +37,10 @@ final class CreateTrackerEmojiCell: UICollectionViewCell {
     
     // MARK: - Selection State
     func setSelected(_ isSelected: Bool) {
-        contentView.backgroundColor = isSelected ? UIColor(resource: .grayYP) : .clear
+        contentView.backgroundColor = isSelected ? Asset.grayYP.color : .clear
     }
     
     func configure(with emoji: String) {
         emojiLabel.text = emoji
     }
 }
-

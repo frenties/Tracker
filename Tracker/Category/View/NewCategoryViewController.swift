@@ -11,7 +11,7 @@ final class NewCategoryViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = UIConstants.Strings.newCategoryTitle
         label.font = UIFont.systemFont(ofSize: UIConstants.categoryTitleFontSize, weight: .medium)
-        label.textColor = UIColor(resource: .blackDay)
+        label.textColor = Asset.blackDay.color
         label.textAlignment = .center
         return label
     }()
@@ -20,7 +20,7 @@ final class NewCategoryViewController: UIViewController {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = UIConstants.Strings.categoryNamePlaceholder
-        textField.backgroundColor = UIColor(resource: .backgroundDay)
+        textField.backgroundColor = Asset.backgroundDay.color
         textField.layer.cornerRadius = UIConstants.cornerRadius
         textField.font = UIFont.systemFont(ofSize: UIConstants.categoryTextFieldFontSize, weight: .regular)
         textField.clearButtonMode = .whileEditing
@@ -35,8 +35,8 @@ final class NewCategoryViewController: UIViewController {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(UIConstants.Strings.doneButtonTitle, for: .normal)
-        button.setTitleColor(UIColor(resource: .whiteDay), for: .normal)
-        button.backgroundColor = UIColor(resource: .grayYP)
+        button.setTitleColor(Asset.whiteDay.color, for: .normal)
+        button.backgroundColor = Asset.grayYP.color
         button.layer.cornerRadius = UIConstants.cornerRadius
         button.titleLabel?.font = UIFont.systemFont(ofSize: UIConstants.categoryButtonFontSize, weight: .medium)
         button.isEnabled = false
@@ -47,7 +47,7 @@ final class NewCategoryViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(resource: .whiteDay)
+        view.backgroundColor = Asset.whiteDay.color
         
         setupUI()
         nameTextField.delegate = self
@@ -60,7 +60,7 @@ final class NewCategoryViewController: UIViewController {
         let isValid = !text.isEmpty
         
         doneButton.isEnabled = isValid
-        doneButton.backgroundColor = isValid ? UIColor(resource: .blackDay) : UIColor(resource: .grayYP)
+        doneButton.backgroundColor = isValid ? Asset.blackDay.color : Asset.grayYP.color
     }
     
     @objc private func didTapDoneButton() {

@@ -13,13 +13,13 @@ final class CategoryViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.layer.cornerRadius = UIConstants.cornerRadius
         tableView.layer.masksToBounds = true
-        tableView.backgroundColor = UIColor(resource: .backgroundDay)
+        tableView.backgroundColor = Asset.backgroundDay.color
         tableView.rowHeight = UIConstants.menuCellHeight
         return tableView
     }()
     
     private let placeholderImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(resource: .starBackground))
+        let imageView = UIImageView(image: Asset.starBackground.image)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         return imageView
@@ -36,7 +36,7 @@ final class CategoryViewController: UIViewController {
         
         let attributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: UIConstants.categoryPlaceholderFontSize, weight: .medium),
-            .foregroundColor: UIColor(resource: .blackDay),
+            .foregroundColor: Asset.blackDay.color,
             .paragraphStyle: paragraphStyle
         ]
         
@@ -51,8 +51,8 @@ final class CategoryViewController: UIViewController {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(UIConstants.Strings.addCategoryButtonTitle, for: .normal)
-        button.setTitleColor(UIColor(resource: .whiteDay), for: .normal)
-        button.backgroundColor = UIColor(resource: .blackDay)
+        button.setTitleColor(Asset.whiteDay.color, for: .normal)
+        button.backgroundColor = Asset.blackDay.color
         button.layer.cornerRadius = UIConstants.cornerRadius
         button.titleLabel?.font = UIFont.systemFont(ofSize: UIConstants.categoryButtonFontSize, weight: .medium)
         button.addTarget(self, action: #selector(didTapAddCategoryButton), for: .touchUpInside)
@@ -73,7 +73,7 @@ final class CategoryViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(resource: .whiteDay)
+        view.backgroundColor = Asset.whiteDay.color
         title = UIConstants.Strings.category
         
         setupUI()
