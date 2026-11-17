@@ -13,8 +13,8 @@ enum WeekDay: Int, CaseIterable {
         let weekDayComponent = calendar.component(.weekday, from: date)
         let systemSunday = 1
         let targetRawValue = weekDayComponent == systemSunday
-        ? WeekDay.sunday.rawValue
-        : weekDayComponent - 1
+            ? WeekDay.sunday.rawValue
+            : weekDayComponent - 1
         self.init(rawValue: targetRawValue)
     }
     

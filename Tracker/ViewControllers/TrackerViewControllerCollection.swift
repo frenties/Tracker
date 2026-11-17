@@ -23,14 +23,7 @@ extension TrackerViewController: UICollectionViewDataSource {
         cell.cardColor = tracker.color
         cell.pinImageView.isHidden = !tracker.isPinned
         
-        var completedTodayIds: Set<UUID> = []
-        for record in completedTrackers {
-            if Calendar.current.isDate(record.date, inSameDayAs: self.currentDate) {
-                completedTodayIds.insert(record.id)
-            }
-        }
-        
-        let isCompletedToday = completedTodayIds.contains(tracker.id)
+        let isCompletedToday = isTrackerCompletedToday(tracker.id)
         
         if isCompletedToday {
             cell.completeButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
@@ -40,8 +33,8 @@ extension TrackerViewController: UICollectionViewDataSource {
             cell.completeButton.alpha = UIConstants.defaultButtonAlpha
         }
         
-        let completedDaysCount = completedTrackers.filter { $0.id == tracker.id }.count
-        cell.daysLabel.text = formatDaysString(for: completedDaysCount)
+        let daysCount = completedDaysCount(for: tracker.id)
+        cell.daysLabel.text = formatDaysString(for: daysCount)
         
         cell.buttonAction = { [weak self] in
             guard let self else { return }
@@ -59,19 +52,7 @@ extension TrackerViewController: UICollectionViewDataSource {
                 return
             }
             
-            let record = TrackerRecord(id: tracker.id, date: self.currentDate)
-            
-            if isCompletedToday {
-                self.completedTrackers.removeAll { record in
-                    record.id == tracker.id && Calendar.current.isDate(record.date, inSameDayAs: self.currentDate)
-                }
-                self.trackerRecordStore.removeRecord(record)
-            } else {
-                self.completedTrackers.append(record)
-                self.trackerRecordStore.addRecord(record)
-            }
-            
-            collectionView.reloadItems(at: [indexPath])
+            self.toggleTrackerCompletion(for: tracker.id, at: indexPath)
         }
         
         return cell
@@ -109,21 +90,12 @@ extension TrackerViewController: UICollectionViewDelegate {
             : String(localized: "context_pin")
             
             let pinAction = UIAction(title: pinTitle) { _ in
-                self.trackerStore.togglePin(for: tracker.id)
-                self.filterTrackers()
+                self.togglePin(for: tracker.id)
             }
             
             let editAction = UIAction(title: String(localized: "context_edit")) { _ in
                 AnalyticsService.shared.report(event: .click, screen: .main, item: .edit)
-                let categoryTitle = self.trackerStore.categoryTitle(for: tracker.id) ?? ""
-                let completedDaysCount = self.completedTrackers.filter { $0.id == tracker.id }.count
-                let editVC = CreateTrackerViewController(
-                    editingTracker: tracker,
-                    categoryTitle: categoryTitle,
-                    completedDaysCount: completedDaysCount
-                )
-                editVC.delegate = self
-                self.present(editVC, animated: true)
+                self.presentEditTracker(tracker)
             }
             
             let deleteAction = UIAction(
@@ -194,11 +166,7 @@ extension TrackerViewController {
             preferredStyle: .actionSheet
         )
         alert.addAction(UIAlertAction(title: String(localized: "context_delete"), style: .destructive) { [weak self] _ in
-            guard let self else { return }
-            self.trackerStore.deleteTracker(with: tracker.id)
-            self.trackerRecordStore.deleteAllRecords(for: tracker.id)
-            self.completedTrackers.removeAll { $0.id == tracker.id }
-            self.filterTrackers()
+            self?.deleteTracker(tracker)
         })
         alert.addAction(UIAlertAction(title: String(localized: "cancel_button"), style: .cancel))
         present(alert, animated: true)

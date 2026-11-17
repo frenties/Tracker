@@ -28,8 +28,8 @@ final class TrackerStore: NSObject {
             
             let colorIndex = Int(coreDataTracker.color ?? "0") ?? 0
             let color = (colorIndex >= 0 && colorIndex < UIConstants.colors.count)
-            ? UIConstants.colors[colorIndex]
-            : UIConstants.colors[0]
+                ? UIConstants.colors[colorIndex]
+                : UIConstants.colors[0]
             
             return Tracker(
                 id: coreDataTracker.id ?? UUID(),

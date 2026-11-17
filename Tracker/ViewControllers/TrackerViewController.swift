@@ -1,17 +1,17 @@
 import UIKit
 
-final class TrackerViewController: UIViewController, TrackerStoreDelegate {
+final class TrackerViewController: UIViewController {
     
     // MARK: - Properties
-    let trackerStore: TrackerStore
+    private let trackerStore: TrackerStore
     private let trackerCategoryStore: TrackerCategoryStore
-    let trackerRecordStore: TrackerRecordStore
+    private let trackerRecordStore: TrackerRecordStore
     
-    var categories: [TrackerCategory] = []
-    var completedTrackers: [TrackerRecord] = []
-    var visibleCategories: [TrackerCategory] = []
-    var currentDate: Date = Date()
-    var selectedFilter: TrackerFilter = .all
+    private var categories: [TrackerCategory] = []
+    private var completedTrackers: [TrackerRecord] = []
+    private(set) var visibleCategories: [TrackerCategory] = []
+    private(set) var currentDate: Date = Date()
+    private var selectedFilter: TrackerFilter = .all
     
     // MARK: - UI Elements
     let titleLabel: UILabel = {
@@ -158,6 +158,57 @@ final class TrackerViewController: UIViewController, TrackerStoreDelegate {
         AnalyticsService.shared.report(event: .close, screen: .main)
     }
     
+    // MARK: - Internal Methods for Collection Extensions
+    func isTrackerCompletedToday(_ trackerId: UUID) -> Bool {
+        completedTrackers.contains { record in
+            record.id == trackerId && Calendar.current.isDate(record.date, inSameDayAs: currentDate)
+        }
+    }
+    
+    func completedDaysCount(for trackerId: UUID) -> Int {
+        completedTrackers.filter { $0.id == trackerId }.count
+    }
+    
+    func toggleTrackerCompletion(for trackerId: UUID, at indexPath: IndexPath) {
+        let record = TrackerRecord(id: trackerId, date: currentDate)
+        
+        if isTrackerCompletedToday(trackerId) {
+            completedTrackers.removeAll { existingRecord in
+                existingRecord.id == trackerId && Calendar.current.isDate(existingRecord.date, inSameDayAs: currentDate)
+            }
+            trackerRecordStore.removeRecord(record)
+        } else {
+            completedTrackers.append(record)
+            trackerRecordStore.addRecord(record)
+        }
+        
+        collectionView.reloadItems(at: [indexPath])
+    }
+    
+    func togglePin(for trackerId: UUID) {
+        trackerStore.togglePin(for: trackerId)
+        filterTrackers()
+    }
+    
+    func presentEditTracker(_ tracker: Tracker) {
+        let categoryTitle = trackerStore.categoryTitle(for: tracker.id) ?? ""
+        let daysCount = completedDaysCount(for: tracker.id)
+        let editVC = CreateTrackerViewController(
+            editingTracker: tracker,
+            categoryTitle: categoryTitle,
+            completedDaysCount: daysCount
+        )
+        editVC.delegate = self
+        present(editVC, animated: true)
+    }
+    
+    func deleteTracker(_ tracker: Tracker) {
+        trackerStore.deleteTracker(with: tracker.id)
+        trackerRecordStore.deleteAllRecords(for: tracker.id)
+        completedTrackers.removeAll { $0.id == tracker.id }
+        filterTrackers()
+    }
+    
     // MARK: - Actions & Filtering
     private func setupInteractions() {
         searchTextField.delegate = self
@@ -171,48 +222,57 @@ final class TrackerViewController: UIViewController, TrackerStoreDelegate {
         
         datePicker.addAction(
             UIAction { [weak self] _ in
-                guard let self else { return }
-                self.currentDate = self.datePicker.date
-                if self.selectedFilter == .today {
-                    self.selectedFilter = .all
-                }
-                self.filterTrackers()
+                self?.didChangeDate()
             },
             for: .valueChanged
         )
         
         addTrackerButton.addAction(
             UIAction { [weak self] _ in
-                guard let self else { return }
-                AnalyticsService.shared.report(event: .click, screen: .main, item: .addTrack)
-                let createTrackerVC = CreateTrackerViewController()
-                createTrackerVC.delegate = self
-                self.present(createTrackerVC, animated: true)
+                self?.didTapAddTrackerButton()
             },
             for: .touchUpInside
         )
         
         filtersButton.addAction(
             UIAction { [weak self] _ in
-                guard let self else { return }
-                AnalyticsService.shared.report(event: .click, screen: .main, item: .filter)
-                let filtersVC = FiltersViewController(selectedFilter: self.selectedFilter)
-                filtersVC.onSelectFilter = { [weak self] chosenFilter in
-                    guard let self else { return }
-                    self.selectedFilter = chosenFilter
-                    if chosenFilter == .today {
-                        self.currentDate = Date()
-                        self.datePicker.date = self.currentDate
-                    }
-                    self.filterTrackers()
-                }
-                self.present(filtersVC, animated: true)
+                self?.didTapFiltersButton()
             },
             for: .touchUpInside
         )
     }
     
-    func filterTrackers() {
+    private func didChangeDate() {
+        currentDate = datePicker.date
+        if selectedFilter == .today {
+            selectedFilter = .all
+        }
+        filterTrackers()
+    }
+    
+    private func didTapAddTrackerButton() {
+        AnalyticsService.shared.report(event: .click, screen: .main, item: .addTrack)
+        let createTrackerVC = CreateTrackerViewController()
+        createTrackerVC.delegate = self
+        present(createTrackerVC, animated: true)
+    }
+    
+    private func didTapFiltersButton() {
+        AnalyticsService.shared.report(event: .click, screen: .main, item: .filter)
+        let filtersVC = FiltersViewController(selectedFilter: selectedFilter)
+        filtersVC.onSelectFilter = { [weak self] chosenFilter in
+            guard let self else { return }
+            self.selectedFilter = chosenFilter
+            if chosenFilter == .today {
+                self.currentDate = Date()
+                self.datePicker.date = self.currentDate
+            }
+            self.filterTrackers()
+        }
+        present(filtersVC, animated: true)
+    }
+    
+    private func filterTrackers() {
         guard let currentWeekDay = WeekDay(date: currentDate) else {
             return
         }
@@ -225,17 +285,12 @@ final class TrackerViewController: UIViewController, TrackerStoreDelegate {
             category.trackers.contains { $0.schedule.contains(currentWeekDay) }
         }
         filtersButton.isHidden = !hasAnyTrackersForDay
-        
         var pinnedTrackers: [Tracker] = []
-        
         let regularCategories: [TrackerCategory] = allCategories.compactMap { category in
             let filteredTrackers = category.trackers.filter { tracker in
                 let matchesDate = tracker.schedule.contains(currentWeekDay)
                 let matchesSearch = !isSearching || tracker.name.localizedStandardContains(query)
-                let isCompletedToday = completedTrackers.contains { record in
-                    record.id == tracker.id && Calendar.current.isDate(record.date, inSameDayAs: currentDate)
-                }
-                
+                let isCompletedToday = isTrackerCompletedToday(tracker.id)
                 let matchesFilter: Bool
                 switch selectedFilter {
                 case .all, .today:
@@ -245,19 +300,14 @@ final class TrackerViewController: UIViewController, TrackerStoreDelegate {
                 case .uncompleted:
                     matchesFilter = !isCompletedToday
                 }
-                
                 return matchesDate && matchesSearch && matchesFilter
             }
-            
             let pinnedInCategory = filteredTrackers.filter { $0.isPinned }
             let unpinnedInCategory = filteredTrackers.filter { !$0.isPinned }
-            
             pinnedTrackers.append(contentsOf: pinnedInCategory)
-            
             guard !unpinnedInCategory.isEmpty else { return nil }
             return TrackerCategory(title: category.title, trackers: unpinnedInCategory)
         }
-        
         var resultCategories: [TrackerCategory] = []
         if !pinnedTrackers.isEmpty {
             resultCategories.append(
@@ -296,6 +346,9 @@ extension TrackerViewController: CreateTrackerViewControllerDelegate {
         trackerStore.updateTracker(tracker, toCategory: title)
         filterTrackers()
     }
+}
+// MARK: - TrackerStoreDelegate
+extension TrackerViewController: TrackerStoreDelegate {
     func store(_ store: TrackerStore, didUpdate update: TrackerStoreUpdate) {
         filterTrackers()
     }
