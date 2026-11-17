@@ -1,23 +1,29 @@
 import UIKit
 
-final class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
+final class OnboardingViewController: UIPageViewController,
+                                      UIPageViewControllerDataSource,
+                                      UIPageViewControllerDelegate {
     
     // MARK: - Properties
     var onCompletion: (() -> Void)?
     
     private lazy var pages: [UIViewController] = {
         let firstPage = OnboardingPageViewController(
-            imageResource: .firstpage,
-            titleText: "Отслеживайте только то, что хотите"
+            imageAsset: Asset.firstpage,
+            titleText: String(localized: "onboarding_first_title")
         )
         
         let secondPage = OnboardingPageViewController(
-            imageResource: .secondpage,
-            titleText: "Даже если это не литры воды и йога"
+            imageAsset: Asset.secondpage,
+            titleText: String(localized: "onboarding_second_title")
         )
         
-        firstPage.onConfirmButtonTapped = { [weak self] in self?.onCompletion?() }
-        secondPage.onConfirmButtonTapped = { [weak self] in self?.onCompletion?() }
+        firstPage.onConfirmButtonTapped = { [weak self] in
+            self?.onCompletion?()
+        }
+        secondPage.onConfirmButtonTapped = { [weak self] in
+            self?.onCompletion?()
+        }
         
         return [firstPage, secondPage]
     }()
@@ -27,8 +33,10 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         pageControl.numberOfPages = pages.count
         pageControl.currentPage = 0
         
-        pageControl.currentPageIndicatorTintColor = .blackDay
-        pageControl.pageIndicatorTintColor = .blackDay.withAlphaComponent(UIConstants.onboardingPageControlAlpha)
+        pageControl.currentPageIndicatorTintColor = Asset.blackDay.color
+        pageControl.pageIndicatorTintColor = Asset.blackDay.color.withAlphaComponent(
+            UIConstants.onboardingPageControlAlpha
+        )
         
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         return pageControl
@@ -36,7 +44,11 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
     
     // MARK: - Initializers
     init() {
-        super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+        super.init(
+            transitionStyle: .scroll,
+            navigationOrientation: .horizontal,
+            options: nil
+        )
     }
     
     @available(*, unavailable)
@@ -52,7 +64,12 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         delegate = self
         
         if let first = pages.first {
-            setViewControllers([first], direction: .forward, animated: true, completion: nil)
+            setViewControllers(
+                [first],
+                direction: .forward,
+                animated: true,
+                completion: nil
+            )
         }
         
         setupViews()
@@ -66,14 +83,21 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            pageControl.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: UIConstants.onboardingPageControlBottomOffset),
+            pageControl.bottomAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                constant: UIConstants.onboardingPageControlBottomOffset
+            ),
             pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
     
     // MARK: - UIPageViewControllerDataSource
-    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        guard let viewControllerIndex = pages.firstIndex(of: viewController) else { return nil }
+    func pageViewController(
+        _ pageViewController: UIPageViewController,
+        viewControllerBefore viewController: UIViewController
+    ) -> UIViewController? {
+        guard let viewControllerIndex = pages.firstIndex(of: viewController)
+                else { return nil }
         
         let previousIndex = viewControllerIndex - 1
         
@@ -84,8 +108,12 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         return pages[previousIndex]
     }
     
-    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        guard let viewControllerIndex = pages.firstIndex(of: viewController) else { return nil }
+    func pageViewController(
+        _ pageViewController: UIPageViewController,
+        viewControllerAfter viewController: UIViewController
+    ) -> UIViewController? {
+        guard let viewControllerIndex = pages.firstIndex(of: viewController)
+                else { return nil }
         
         let nextIndex = viewControllerIndex + 1
         
@@ -97,10 +125,17 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
     }
     
     // MARK: - UIPageViewControllerDelegate
-    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+    func pageViewController(
+        _ pageViewController: UIPageViewController,
+        didFinishAnimating finished: Bool,
+        previousViewControllers: [UIViewController],
+        transitionCompleted completed: Bool
+    ) {
         if completed,
-           let currentViewController = pageViewController.viewControllers?.first,
-           let currentIndex = pages.firstIndex(of: currentViewController) {
+           let currentViewController = pageViewController.viewControllers?
+            .first,
+           let currentIndex = pages.firstIndex(of: currentViewController)
+        {
             pageControl.currentPage = currentIndex
         }
     }

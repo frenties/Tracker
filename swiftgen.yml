@@ -1,0 +1,6 @@
+xcassets:
+  inputs:
+    - Tracker/SupportingFiles/Assets.xcassets
+  outputs:
+    - templateName: swift5
+      output: Tracker/Generated/Assets+Generated.swift

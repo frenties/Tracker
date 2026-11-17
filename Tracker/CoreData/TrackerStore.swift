@@ -36,7 +36,8 @@ final class TrackerStore: NSObject {
                 name: coreDataTracker.name ?? "",
                 color: color,
                 emoji: coreDataTracker.emoji ?? "🙂",
-                schedule: schedule
+                schedule: schedule,
+                isPinned: coreDataTracker.isPinned
             )
         }
     }
@@ -83,6 +84,7 @@ final class TrackerStore: NSObject {
         trackerCoreData.id = tracker.id
         trackerCoreData.name = tracker.name
         trackerCoreData.emoji = tracker.emoji
+        trackerCoreData.isPinned = tracker.isPinned
         
         let colorIndex = UIConstants.colors.firstIndex(where: { $0.cgColor == tracker.color.cgColor }) ?? 0
         trackerCoreData.color = String(colorIndex)
@@ -101,6 +103,59 @@ final class TrackerStore: NSObject {
         }
         
         CoreDataStack.shared.saveContext()
+    }
+    
+    func updateTracker(_ tracker: Tracker, toCategory categoryTitle: String) {
+        let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", tracker.id as NSObject)
+        
+        guard let trackerCoreData = try? context.fetch(fetchRequest).first else { return }
+        
+        trackerCoreData.name = tracker.name
+        trackerCoreData.emoji = tracker.emoji
+        trackerCoreData.isPinned = tracker.isPinned
+        
+        let colorIndex = UIConstants.colors.firstIndex(where: { $0.cgColor == tracker.color.cgColor }) ?? 0
+        trackerCoreData.color = String(colorIndex)
+        trackerCoreData.setValue(convertScheduleToString(tracker.schedule), forKey: "schedule")
+        
+        let categoryFetchRequest: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
+        categoryFetchRequest.predicate = NSPredicate(format: "title == %@", categoryTitle)
+        
+        if let existingCategory = try? context.fetch(categoryFetchRequest).first {
+            trackerCoreData.category = existingCategory
+        } else {
+            let newCategory = TrackerCategoryCoreData(context: context)
+            newCategory.title = categoryTitle
+            trackerCoreData.category = newCategory
+        }
+        
+        CoreDataStack.shared.saveContext()
+    }
+    
+    func categoryTitle(for trackerId: UUID) -> String? {
+        let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", trackerId as NSObject)
+        return (try? context.fetch(fetchRequest).first)?.category?.title
+    }
+    
+    func togglePin(for trackerId: UUID) {
+        let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", trackerId as NSObject)
+        
+        guard let trackerCoreData = try? context.fetch(fetchRequest).first else { return }
+        trackerCoreData.isPinned.toggle()
+        CoreDataStack.shared.saveContext()
+    }
+    
+    func deleteTracker(with id: UUID) {
+        let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", id as NSObject)
+        
+        if let trackersToDelete = try? context.fetch(fetchRequest) {
+            trackersToDelete.forEach { context.delete($0) }
+            CoreDataStack.shared.saveContext()
+        }
     }
     
     // MARK: - Private Methods

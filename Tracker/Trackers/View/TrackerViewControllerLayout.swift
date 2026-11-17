@@ -1,50 +1,44 @@
 import UIKit
 
-// MARK: - Layout Configuration
 extension TrackerViewController {
     
     func setupTitleLabel() {
         view.addSubview(titleLabel)
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 88),
-            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
+            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.mainTitleTopOffset),
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.leadingPadding)
         ])
     }
     
     func setupAddButton() {
         view.addSubview(addTrackerButton)
-        addTrackerButton.addTarget(nil, action: #selector(addTrackerButtonTapped), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
-            addTrackerButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 45),
-            addTrackerButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 6),
-            addTrackerButton.widthAnchor.constraint(equalToConstant: 42),
-            addTrackerButton.heightAnchor.constraint(equalToConstant: 42)
+            addTrackerButton.topAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.addButtonTopOffset),
+            addTrackerButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.addButtonLeadingPadding),
+            addTrackerButton.widthAnchor.constraint(equalToConstant: UIConstants.addButtonSize),
+            addTrackerButton.heightAnchor.constraint(equalToConstant: UIConstants.addButtonSize)
         ])
     }
     
     func setupDatePicker() {
         view.addSubview(datePicker)
         
-        datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
-        
         NSLayoutConstraint.activate([
             datePicker.centerYAnchor.constraint(equalTo: addTrackerButton.centerYAnchor),
-            datePicker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+            datePicker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: UIConstants.trailingPadding)
         ])
     }
     
     func setupSearchTextField() {
         view.addSubview(searchTextField)
         
-        searchTextField.addTarget(self, action: #selector(searchTextFieldChanged), for: .editingChanged)
-        
         NSLayoutConstraint.activate([
-            searchTextField.topAnchor.constraint(equalTo: view.topAnchor, constant: 136),
-            searchTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            searchTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            searchTextField.heightAnchor.constraint(equalToConstant: 36)
+            searchTextField.topAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.searchFieldTopOffset),
+            searchTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.leadingPadding),
+            searchTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: UIConstants.trailingPadding),
+            searchTextField.heightAnchor.constraint(equalToConstant: UIConstants.searchFieldHeight)
         ])
     }
     
@@ -55,9 +49,9 @@ extension TrackerViewController {
         collectionView.delegate = self
         
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: searchTextField.bottomAnchor, constant: 16),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            collectionView.topAnchor.constraint(equalTo: searchTextField.bottomAnchor, constant: UIConstants.collectionTopOffset),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.leadingPadding),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: UIConstants.trailingPadding),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
@@ -66,10 +60,10 @@ extension TrackerViewController {
         view.addSubview(backgroundImage)
         
         NSLayoutConstraint.activate([
-            backgroundImage.widthAnchor.constraint(equalToConstant: 80),
-            backgroundImage.heightAnchor.constraint(equalToConstant: 80),
+            backgroundImage.widthAnchor.constraint(equalToConstant: UIConstants.categoryPlaceholderImageSize),
+            backgroundImage.heightAnchor.constraint(equalToConstant: UIConstants.categoryPlaceholderImageSize),
             backgroundImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            backgroundImage.centerYAnchor.constraint(equalTo: view.topAnchor, constant: 402)
+            backgroundImage.centerYAnchor.constraint(equalTo: view.topAnchor, constant: UIConstants.emptyStateImageCenterYOffset)
         ])
     }
     
@@ -77,8 +71,19 @@ extension TrackerViewController {
         view.addSubview(subtitleLabel)
         
         NSLayoutConstraint.activate([
-            subtitleLabel.topAnchor.constraint(equalTo: backgroundImage.bottomAnchor, constant: 8),
+            subtitleLabel.topAnchor.constraint(equalTo: backgroundImage.bottomAnchor, constant: UIConstants.categoryPlaceholderLabelTopOffset),
             subtitleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
+    }
+    
+    func setupFiltersButton() {
+        view.addSubview(filtersButton)
+        
+        NSLayoutConstraint.activate([
+            filtersButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            filtersButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: UIConstants.filtersButtonBottomOffset),
+            filtersButton.widthAnchor.constraint(equalToConstant: UIConstants.filtersButtonWidth),
+            filtersButton.heightAnchor.constraint(equalToConstant: UIConstants.filtersButtonHeight)
         ])
     }
 }

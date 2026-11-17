@@ -17,24 +17,24 @@ enum UIConstants {
     ]
     
     static let colors: [UIColor] = [
-        UIColor(resource: .colorSelection1),
-        UIColor(resource: .colorSelection2),
-        UIColor(resource: .colorSelection3),
-        UIColor(resource: .colorSelection4),
-        UIColor(resource: .colorSelection5),
-        UIColor(resource: .colorSelection6),
-        UIColor(resource: .colorSelection7),
-        UIColor(resource: .colorSelection8),
-        UIColor(resource: .colorSelection9),
-        UIColor(resource: .colorSelection10),
-        UIColor(resource: .colorSelection11),
-        UIColor(resource: .colorSelection12),
-        UIColor(resource: .colorSelection13),
-        UIColor(resource: .colorSelection14),
-        UIColor(resource: .colorSelection15),
-        UIColor(resource: .colorSelection16),
-        UIColor(resource: .colorSelection17),
-        UIColor(resource: .colorSelection18)
+        Asset.colorSelection1.color,
+        Asset.colorSelection2.color,
+        Asset.colorSelection3.color,
+        Asset.colorSelection4.color,
+        Asset.colorSelection5.color,
+        Asset.colorSelection6.color,
+        Asset.colorSelection7.color,
+        Asset.colorSelection8.color,
+        Asset.colorSelection9.color,
+        Asset.colorSelection10.color,
+        Asset.colorSelection11.color,
+        Asset.colorSelection12.color,
+        Asset.colorSelection13.color,
+        Asset.colorSelection14.color,
+        Asset.colorSelection15.color,
+        Asset.colorSelection16.color,
+        Asset.colorSelection17.color,
+        Asset.colorSelection18.color
     ]
     
     static let titleWidth: CGFloat = 133
@@ -129,6 +129,72 @@ enum UIConstants {
     static let colorCellBorderWidth: CGFloat = 3
     static let colorCellSelectionAlpha: CGFloat = 0.3
     
+    // MARK: - Tracker Card Cell Constants
+    static let cardCornerRadius: CGFloat = 16
+    static let cardBorderWidth: CGFloat = 1
+    static let cardHeight: CGFloat = 90
+    static let cardContentPadding: CGFloat = 12
+    static let emojiBackgroundSize: CGFloat = 24
+    static let emojiBackgroundCornerRadius: CGFloat = 12
+    static let emojiBackgroundAlpha: CGFloat = 0.3
+    static let emojiFontSize: CGFloat = 16
+    static let cardTextFontSize: CGFloat = 12
+    static let titleNumberOfLines = 2
+    static let completeButtonTopOffset: CGFloat = 8
+    static let completeButtonSize: CGFloat = 34
+    static let completeButtonCornerRadius: CGFloat = 17
+    
+    // MARK: - Main Screen Constants
+    static let mainTitleFontSize: CGFloat = 34
+    static let mainSubtitleFontSize: CGFloat = 12
+    static let datePickerCornerRadius: CGFloat = 8
+    static let searchFieldCornerRadius: CGFloat = 10
+    
+    // MARK: - Main Screen Layout Constants
+    static let mainTitleTopOffset: CGFloat = 88
+    static let addButtonTopOffset: CGFloat = 45
+    static let addButtonLeadingPadding: CGFloat = 6
+    static let addButtonSize: CGFloat = 42
+    static let searchFieldTopOffset: CGFloat = 136
+    static let searchFieldHeight: CGFloat = 36
+    static let collectionTopOffset: CGFloat = 16
+    static let emptyStateImageCenterYOffset: CGFloat = 402
+    
+    // MARK: - Trackers Collection Constants
+    static let trackersColumnsCount: CGFloat = 2
+    static let trackersCellHeight: CGFloat = 148
+    static let trackersInterItemSpacing: CGFloat = 9
+    static let trackersSectionTopInset: CGFloat = 12
+    static let trackersSectionBottomInset: CGFloat = 16
+    static let trackersSectionRightInset: CGFloat = 16
+    static let trackersHeaderHeight: CGFloat = 18
+    static let completedButtonAlpha: CGFloat = 0.5
+    static let defaultButtonAlpha: CGFloat = 1.0
+    
+    // MARK: - Statistic Screen Constants
+    static let statisticCardsTopOffset: CGFloat = 77
+    static let statisticStackSpacing: CGFloat = 12
+    static let statisticCardHeight: CGFloat = 90
+    static let statisticCardCornerRadius: CGFloat = 16
+    static let statisticCardBorderWidth: CGFloat = 1
+    static let statisticCardPadding: CGFloat = 12
+    static let statisticCardInnerSpacing: CGFloat = 7
+    static let statisticValueFontSize: CGFloat = 34
+    static let statisticDescriptionFontSize: CGFloat = 12
+    
+    static let statisticGradientStartPoint = CGPoint(x: 0, y: 0.5)
+    static let statisticGradientEndPoint = CGPoint(x: 1, y: 0.5)
+    static let statisticBorderInsetDivisor: CGFloat = 2
+    
+    static let editDaysCountFontSize: CGFloat = 32
+    static let editTextFieldTopOffset: CGFloat = 40
+    
+    // MARK: - Filters Screen Constants
+    static let filtersButtonWidth: CGFloat = 114
+    static let filtersButtonHeight: CGFloat = 50
+    static let filtersButtonBottomOffset: CGFloat = -16
+    static let collectionBottomInsetWithFilters: CGFloat = 80
+    
     // MARK: - Localizable Strings (String Catalog)
     enum Strings {
         static let category = String(localized: "create_tracker_category")
@@ -136,15 +202,17 @@ enum UIConstants {
         static let everyDay = String(localized: "create_tracker_every_day")
         static let emojiSectionTitle = String(localized: "create_tracker_emoji_section")
         static let colorSectionTitle = String(localized: "create_tracker_color_section")
-        static let categoryPlaceholder = "Привычки и события можно\nобъединить по смыслу"
-        static let addCategoryButtonTitle = "Добавить категорию"
-        static let newCategoryTitle = "Новая категория"
-        static let categoryNamePlaceholder = "Введите название категории"
-        static let doneButtonTitle = "Готово"
-        static let newHabitTitle = "Новая привычка"
-        static let trackerNamePlaceholder = "Введите название трекера"
-        static let cancelButtonTitle = "Отменить"
-        static let createButtonTitle = "Создать"
-        static let nameLengthError = "Ограничение 38 символов"
+        
+        static let categoryPlaceholder = String(localized: "category_placeholder")
+        static let addCategoryButtonTitle = String(localized: "add_category_button")
+        static let newCategoryTitle = String(localized: "new_category_title")
+        static let categoryNamePlaceholder = String(localized: "category_name_placeholder")
+        static let doneButtonTitle = String(localized: "done_button")
+        
+        static let newHabitTitle = String(localized: "new_habit_title")
+        static let trackerNamePlaceholder = String(localized: "tracker_name_placeholder")
+        static let cancelButtonTitle = String(localized: "cancel_button")
+        static let createButtonTitle = String(localized: "create_button")
+        static let nameLengthError = String(localized: "name_length_error")
     }
 }

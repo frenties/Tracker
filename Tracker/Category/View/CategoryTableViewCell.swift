@@ -8,7 +8,7 @@ final class CategoryTableViewCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: UIConstants.categoryTextFieldFontSize, weight: .regular)
-        label.textColor = UIColor(resource: .blackDay)
+        label.textColor = Asset.blackDay.color
         return label
     }()
     

@@ -16,9 +16,9 @@ final class ScheduleViewController: UIViewController {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Расписание"
-        label.textColor = UIColor(resource: .blackDay)
-        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        label.text = UIConstants.Strings.schedule
+        label.textColor = Asset.blackDay.color
+        label.font = UIFont.systemFont(ofSize: UIConstants.categoryTitleFontSize, weight: .medium)
         label.textAlignment = .center
         return label
     }()
@@ -26,23 +26,28 @@ final class ScheduleViewController: UIViewController {
     private let scheduleTableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.backgroundColor = UIColor(resource: .backgroundDay)
-        tableView.layer.cornerRadius = 16
+        tableView.backgroundColor = Asset.backgroundDay.color
+        tableView.layer.cornerRadius = UIConstants.cornerRadius
         tableView.isScrollEnabled = false
         tableView.tableFooterView = UIView()
         tableView.separatorStyle = .singleLine
-        tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        tableView.separatorInset = UIEdgeInsets(
+            top: 0,
+            left: UIConstants.leadingPadding,
+            bottom: 0,
+            right: UIConstants.leadingPadding
+        )
         return tableView
     }()
     
     private let doneButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Готово", for: .normal)
-        button.setTitleColor(.whiteDay, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        button.layer.cornerRadius = 16
-        button.backgroundColor = UIColor(resource: .blackDay)
+        button.setTitle(UIConstants.Strings.doneButtonTitle, for: .normal)
+        button.setTitleColor(Asset.whiteDay.color, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: UIConstants.categoryButtonFontSize, weight: .medium)
+        button.layer.cornerRadius = UIConstants.cornerRadius
+        button.backgroundColor = Asset.blackDay.color
         return button
     }()
     
@@ -63,20 +68,19 @@ final class ScheduleViewController: UIViewController {
         doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 38),
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: UIConstants.titleTopOffset),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleLabel.widthAnchor.constraint(equalToConstant: 97),
-            titleLabel.heightAnchor.constraint(equalToConstant: 22),
+            titleLabel.heightAnchor.constraint(equalToConstant: UIConstants.titleHeight),
             
             scheduleTableView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 30),
-            scheduleTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            scheduleTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            scheduleTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.leadingPadding),
+            scheduleTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: UIConstants.trailingPadding),
             scheduleTableView.heightAnchor.constraint(equalToConstant: 525),
             
             doneButton.topAnchor.constraint(equalTo: scheduleTableView.bottomAnchor, constant: 40),
-            doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            doneButton.heightAnchor.constraint(equalToConstant: 60)
+            doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.buttonLeadingPadding),
+            doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: UIConstants.buttonTrailingPadding),
+            doneButton.heightAnchor.constraint(equalToConstant: UIConstants.buttonHeight)
         ])
     }
     
@@ -117,12 +121,12 @@ extension ScheduleViewController: UITableViewDataSource, UITableViewDelegate {
         
         let day = weekDays[indexPath.row]
         
-        cell.textLabel?.text = day.russianName
-        cell.textLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        cell.textLabel?.textColor = UIColor(resource: .blackDay)
+        cell.textLabel?.text = day.localizedName
+        cell.textLabel?.font = UIFont.systemFont(ofSize: UIConstants.categoryTextFieldFontSize, weight: .regular)
+        cell.textLabel?.textColor = Asset.blackDay.color
         
         let switchView = UISwitch()
-        switchView.onTintColor = UIColor(resource: .blueYP)
+        switchView.onTintColor = Asset.blueYP.color
         switchView.tag = indexPath.row
         switchView.isOn = currentSelectedDays.contains(day)
         switchView.addTarget(self, action: #selector(switchValueChanged(_:)), for: .valueChanged)
@@ -130,15 +134,20 @@ extension ScheduleViewController: UITableViewDataSource, UITableViewDelegate {
         cell.accessoryView = switchView
         
         if indexPath.row == weekDays.count - 1 {
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10000)
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
         } else {
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+            cell.separatorInset = UIEdgeInsets(
+                top: 0,
+                left: UIConstants.leadingPadding,
+                bottom: 0,
+                right: UIConstants.leadingPadding
+            )
         }
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 75
+        return UIConstants.menuCellHeight
     }
 }

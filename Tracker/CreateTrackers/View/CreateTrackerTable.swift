@@ -4,7 +4,7 @@ import UIKit
 extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return UIConstants.optionsTableRowsCount
+        UIConstants.optionsTableRowsCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -14,14 +14,14 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
         cell.selectionStyle = .none
         
         cell.textLabel?.font = UIFont.systemFont(ofSize: UIConstants.categoryTextFieldFontSize, weight: .regular)
-        cell.textLabel?.textColor = UIColor(resource: .blackDay)
+        cell.textLabel?.textColor = Asset.blackDay.color
         
         if indexPath.row == UIConstants.categoryRowIndex {
             cell.textLabel?.text = UIConstants.Strings.category
             if !selectedCategoryTitle.isEmpty {
                 cell.detailTextLabel?.text = selectedCategoryTitle
                 cell.detailTextLabel?.font = UIFont.systemFont(ofSize: UIConstants.categoryTextFieldFontSize, weight: .regular)
-                cell.detailTextLabel?.textColor = UIColor(resource: .gray)
+                cell.detailTextLabel?.textColor = Asset.grayButton.color
             } else {
                 cell.detailTextLabel?.text = nil
             }
@@ -31,14 +31,14 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
             if !selectedDays.isEmpty {
                 cell.detailTextLabel?.text = formatSelectedDays(selectedDays)
                 cell.detailTextLabel?.font = UIFont.systemFont(ofSize: UIConstants.categoryTextFieldFontSize, weight: .regular)
-                cell.detailTextLabel?.textColor = UIColor(resource: .gray)
+                cell.detailTextLabel?.textColor = Asset.grayButton.color
             } else {
                 cell.detailTextLabel?.text = nil
             }
         }
         
-        let chevronImageView = UIImageView(image: UIImage(resource: .chevron))
-        chevronImageView.tintColor = UIColor(resource: .grayYP)
+        let chevronImageView = UIImageView(image: Asset.chevron.image)
+        chevronImageView.tintColor = Asset.grayYP.color
         cell.accessoryView = chevronImageView
         
         if indexPath.row == UIConstants.scheduleRowIndex {
@@ -56,7 +56,7 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UIConstants.menuCellHeight
+        UIConstants.menuCellHeight
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -139,17 +139,6 @@ private extension CreateTrackerViewController {
             return UIConstants.Strings.everyDay
         }
         
-        let shortNames = days.map { day -> String in
-            switch day {
-            case .monday: return "Пн"
-            case .tuesday: return "Вт"
-            case .wednesday: return "Ср"
-            case .thursday: return "Чт"
-            case .friday: return "Пт"
-            case .saturday: return "Сб"
-            case .sunday: return "Вс"
-            }
-        }
-        return shortNames.joined(separator: ", ")
+        return days.map(\.shortLocalizedName).joined(separator: ", ")
     }
 }

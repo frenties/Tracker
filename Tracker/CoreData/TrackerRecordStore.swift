@@ -19,6 +19,7 @@ final class TrackerRecordStore: NSObject {
     weak var delegate: TrackerRecordStoreDelegate?
     
     var records: [TrackerRecord] {
+        try? fetchedResultsController.performFetch()
         guard let objects = fetchedResultsController.fetchedObjects else { return [] }
         return objects.map { coreDataRecord in
             TrackerRecord(
@@ -56,24 +57,45 @@ final class TrackerRecordStore: NSObject {
     }
     
     // MARK: - Public Methods
-    
     func addRecord(_ record: TrackerRecord) {
+        let calendar = Calendar.current
+        let dateStart = calendar.startOfDay(for: record.date)
+        guard let dateEnd = calendar.date(byAdding: .day, value: 1, to: dateStart) else {
+            return
+        }
+        
+        let fetchRequest = NSFetchRequest<TrackerRecordCoreData>(entityName: "TrackerRecordCoreData")
+        fetchRequest.predicate = NSPredicate(
+            format: "id == %@ AND date >= %@ AND date < %@",
+            record.id as NSObject,
+            dateStart as NSObject,
+            dateEnd as NSObject
+        )
+        
+        let existingCount = (try? context.count(for: fetchRequest)) ?? 0
+        guard existingCount == 0 else { return }
+        
         let recordCoreData = TrackerRecordCoreData(context: context)
         recordCoreData.id = record.id
-        recordCoreData.date = record.date
+        recordCoreData.date = dateStart
         
         CoreDataStack.shared.saveContext()
     }
     
     func removeRecord(_ record: TrackerRecord) {
         let fetchRequest = NSFetchRequest<TrackerRecordCoreData>(entityName: "TrackerRecordCoreData")
+        let calendar = Calendar.current
+        let dateStart = calendar.startOfDay(for: record.date)
         
-        let dateStart = Calendar.current.startOfDay(for: record.date)
+        guard let dateEnd = calendar.date(byAdding: .day, value: 1, to: dateStart) else {
+            return
+        }
         
         fetchRequest.predicate = NSPredicate(
-            format: "id == %@ AND date == %@",
+            format: "id == %@ AND date >= %@ AND date < %@",
             record.id as NSObject,
-            dateStart as NSObject
+            dateStart as NSObject,
+            dateEnd as NSObject
         )
         
         if let records = try? context.fetch(fetchRequest) {
@@ -84,6 +106,15 @@ final class TrackerRecordStore: NSObject {
         }
     }
     
+    func deleteAllRecords(for trackerId: UUID) {
+        let fetchRequest = NSFetchRequest<TrackerRecordCoreData>(entityName: "TrackerRecordCoreData")
+        fetchRequest.predicate = NSPredicate(format: "id == %@", trackerId as NSObject)
+        
+        if let recordsToDelete = try? context.fetch(fetchRequest) {
+            recordsToDelete.forEach { context.delete($0) }
+            CoreDataStack.shared.saveContext()
+        }
+    }
 }
 
 // MARK: - NSFetchedResultsControllerDelegate
